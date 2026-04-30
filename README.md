@@ -35,7 +35,7 @@ This project showcases the development of a modern website created using AI-powe
 ---
 
 ## 🔗 Live Website
-👉 [Click here to view the live website](YOUR_LIVE_LINK)
+👉 [Click here to view the live website](https://shami-coder.github.io/Voltrix/)
 
 ---
 
