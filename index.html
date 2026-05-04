@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>VOLTRIX — Pakistan's Premier 3D Electronics Store</title>
-<meta name="description" content="Buy mobiles, earbuds, laptops & accessories with immersive 3D experience. Prices in PKR. Nationwide delivery in Pakistan." />
+<title>VOLTRIX — Pakistan's Premier Electronics Store</title>
+<meta name="description" content="Buy mobiles, earbuds, laptops & accessories with prices in PKR. Nationwide delivery across Pakistan." />
 
 <!-- Tailwind -->
 <script src="https://cdn.tailwindcss.com"></script>
@@ -15,12 +15,11 @@
 <!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
 
-<!-- Three.js -->
+<!-- Three.js (only used for hero background scene) -->
 <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
 
 <!-- GSAP -->
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/ScrollTrigger.min.js"></script>
 
 <style>
   :root{
@@ -50,7 +49,6 @@
   html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;overflow-x:hidden;scroll-behavior:smooth}
   h1,h2,h3,.font-display{font-family:'Orbitron',sans-serif;letter-spacing:.5px}
 
-  /* Animated background gradient */
   .gradient-bg{
     background:
       radial-gradient(circle at 10% 20%, rgba(0,240,255,.18) 0, transparent 40%),
@@ -59,7 +57,6 @@
       var(--bg);
   }
 
-  /* Glass */
   .glass{
     background:var(--glass);
     backdrop-filter:blur(18px) saturate(160%);
@@ -68,13 +65,13 @@
     border-radius:18px;
   }
   .glass-strong{
-    background:rgba(10,13,28,0.7);
+    background:rgba(10,13,28,0.78);
     backdrop-filter:blur(22px) saturate(180%);
     -webkit-backdrop-filter:blur(22px) saturate(180%);
     border:1px solid var(--glass-border);
   }
+  [data-theme="light"] .glass-strong{background:rgba(255,255,255,.92)}
 
-  /* Neon */
   .neon-text{
     background:linear-gradient(90deg,var(--neon),var(--neon-2),var(--neon-3));
     -webkit-background-clip:text;background-clip:text;color:transparent;
@@ -82,34 +79,27 @@
     animation:gradMove 6s linear infinite;
   }
   @keyframes gradMove{0%{background-position:0 0}100%{background-position:200% 0}}
-  .neon-border{box-shadow:0 0 0 1px rgba(0,240,255,.3),0 0 24px rgba(0,240,255,.18) inset,0 0 24px rgba(168,85,247,.15)}
-  .neon-glow{box-shadow:0 0 30px rgba(0,240,255,.35),0 0 60px rgba(168,85,247,.25)}
 
   .btn-neon{
     position:relative;display:inline-flex;align-items:center;gap:.5rem;
     padding:.75rem 1.4rem;border-radius:999px;
     background:linear-gradient(90deg,var(--neon),var(--neon-2));
-    color:#000;font-weight:700;
+    color:#000;font-weight:700;cursor:pointer;border:none;
     transition:transform .25s ease, box-shadow .25s ease, filter .25s ease;
     box-shadow:0 8px 24px rgba(0,240,255,.35);
   }
   .btn-neon:hover{transform:translateY(-2px) scale(1.03);filter:brightness(1.1);box-shadow:0 12px 36px rgba(168,85,247,.5)}
   .btn-ghost{
     padding:.6rem 1.1rem;border-radius:999px;border:1px solid var(--glass-border);
-    background:var(--glass);color:var(--text);font-weight:600;
+    background:var(--glass);color:var(--text);font-weight:600;cursor:pointer;
     transition:all .25s ease;
   }
   .btn-ghost:hover{border-color:var(--neon);color:var(--neon);box-shadow:0 0 24px rgba(0,240,255,.25)}
 
-  /* Header */
-  .nav-link{position:relative;padding:.5rem .25rem;color:var(--text);opacity:.8;font-weight:500;transition:.25s}
+  .nav-link{position:relative;padding:.5rem .25rem;color:var(--text);opacity:.85;font-weight:500;cursor:pointer;transition:.25s}
   .nav-link:hover{opacity:1;color:var(--neon)}
   .nav-link::after{content:"";position:absolute;left:0;bottom:-4px;width:0;height:2px;background:linear-gradient(90deg,var(--neon),var(--neon-2));transition:width .3s}
   .nav-link:hover::after{width:100%}
-
-  /* Floating cards / 3D tilt */
-  .tilt{transform-style:preserve-3d;transition:transform .25s ease, box-shadow .25s ease;will-change:transform}
-  .tilt:hover{box-shadow:0 30px 60px rgba(0,240,255,.18),0 0 30px rgba(168,85,247,.18)}
 
   .product-card{
     position:relative;border-radius:22px;overflow:hidden;
@@ -117,142 +107,129 @@
     border:1px solid rgba(255,255,255,.08);
     transition:transform .35s ease, box-shadow .35s ease;
   }
-  .product-card::before{
-    content:"";position:absolute;inset:0;border-radius:22px;padding:1px;
-    background:linear-gradient(120deg,transparent 30%,rgba(0,240,255,.5),rgba(168,85,247,.6),transparent 70%);
-    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-    -webkit-mask-composite:xor;mask-composite:exclude;
-    opacity:0;transition:opacity .35s;
-  }
-  .product-card:hover::before{opacity:1}
   .product-card:hover{box-shadow:0 30px 80px rgba(0,240,255,.18),0 0 60px rgba(168,85,247,.18)}
+  .product-card .img-wrap{
+    position:relative;height:220px;overflow:hidden;border-radius:18px;
+    background:linear-gradient(135deg,#fff,#f3f4f6);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .product-card .img-wrap img{
+    width:100%;height:100%;object-fit:contain;padding:14px;
+    transition:transform .5s ease;
+  }
+  .product-card:hover .img-wrap img{transform:scale(1.08) rotate(-2deg)}
 
   .floating{animation:float 6s ease-in-out infinite}
   @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
 
-  /* Loader */
   #loader{position:fixed;inset:0;z-index:9999;background:#03040a;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1.2rem;transition:opacity .8s ease}
-  .loader-cube{width:80px;height:80px;perspective:600px}
+  .loader-cube{width:80px;height:80px;perspective:600px;transform-style:preserve-3d;animation:cubeSpin 3s linear infinite}
   .loader-cube .face{position:absolute;width:80px;height:80px;border:2px solid var(--neon);background:rgba(0,240,255,.08);box-shadow:0 0 20px rgba(0,240,255,.5)}
-  .loader-cube{transform-style:preserve-3d;animation:cubeSpin 3s linear infinite}
   @keyframes cubeSpin{0%{transform:rotateX(0) rotateY(0)}100%{transform:rotateX(360deg) rotateY(360deg)}}
   .f1{transform:translateZ(40px)}.f2{transform:rotateY(180deg) translateZ(40px)}
   .f3{transform:rotateY(90deg) translateZ(40px)}.f4{transform:rotateY(-90deg) translateZ(40px)}
   .f5{transform:rotateX(90deg) translateZ(40px)}.f6{transform:rotateX(-90deg) translateZ(40px)}
 
-  /* Hero canvas */
   #heroCanvas{position:absolute;inset:0;z-index:0}
   .hero-content{position:relative;z-index:2}
-  .scroll-indicator{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:3}
 
-  /* Category 3D card */
   .cat-card{
-    position:relative;height:240px;border-radius:22px;cursor:pointer;
+    position:relative;height:220px;border-radius:22px;cursor:pointer;
     background:linear-gradient(160deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
     border:1px solid rgba(255,255,255,.08);
     transition:transform .5s cubic-bezier(.2,.8,.2,1), box-shadow .5s;
-    transform-style:preserve-3d;
     overflow:hidden;
   }
   .cat-card:hover{transform:translateY(-10px) rotateX(8deg) rotateY(-8deg);box-shadow:0 30px 60px rgba(0,240,255,.25),0 0 50px rgba(168,85,247,.2)}
-  .cat-card .icon-3d{font-size:64px;filter:drop-shadow(0 10px 30px rgba(0,240,255,.5));transition:transform .5s}
-  .cat-card:hover .icon-3d{transform:translateZ(40px) scale(1.1)}
+  .cat-card .icon-3d{font-size:60px;filter:drop-shadow(0 10px 30px rgba(0,240,255,.5));transition:transform .5s}
+  .cat-card:hover .icon-3d{transform:translateY(-8px) scale(1.1)}
 
-  /* Product viewer */
-  .viewer-canvas{width:100%;height:480px;border-radius:22px;background:radial-gradient(circle at 50% 50%,rgba(0,240,255,.08),transparent 70%)}
-
-  /* Toast */
   .toast{position:fixed;top:90px;right:20px;z-index:1000;padding:.9rem 1.2rem;border-radius:14px;display:flex;align-items:center;gap:.6rem;transform:translateX(120%);transition:transform .4s ease}
   .toast.show{transform:translateX(0)}
 
-  /* Drawer */
   .drawer{position:fixed;top:0;right:0;height:100vh;width:min(420px,100%);z-index:900;transform:translateX(100%);transition:transform .45s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column}
   .drawer.open{transform:translateX(0)}
   .overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:899;opacity:0;pointer-events:none;transition:opacity .35s}
   .overlay.show{opacity:1;pointer-events:auto}
 
-  /* Modal */
   .modal{position:fixed;inset:0;z-index:950;display:none;align-items:center;justify-content:center;padding:20px}
   .modal.show{display:flex}
   .modal-card{max-width:1000px;width:100%;max-height:92vh;overflow:auto;border-radius:22px}
 
-  /* Section title */
   .section-title{font-size:clamp(1.6rem,3vw,2.4rem);font-weight:800}
 
-  /* Inputs */
   .input{
     width:100%;padding:.8rem 1rem;border-radius:12px;background:rgba(255,255,255,.04);
-    border:1px solid var(--glass-border);color:var(--text);outline:none;
-    transition:.25s;
+    border:1px solid var(--glass-border);color:var(--text);outline:none;transition:.25s;
+    font-family:inherit;
   }
   .input:focus{border-color:var(--neon);box-shadow:0 0 0 3px rgba(0,240,255,.15)}
   .label{font-size:.8rem;font-weight:600;color:var(--muted);margin-bottom:.35rem;display:block;text-transform:uppercase;letter-spacing:.08em}
 
-  /* Tabs */
   .tab{padding:.6rem 1rem;border-radius:10px;cursor:pointer;font-weight:600;color:var(--muted);transition:.25s}
   .tab.active{background:linear-gradient(90deg,var(--neon),var(--neon-2));color:#000}
 
-  /* Scrollbar */
   ::-webkit-scrollbar{width:10px;height:10px}
   ::-webkit-scrollbar-track{background:transparent}
   ::-webkit-scrollbar-thumb{background:linear-gradient(var(--neon),var(--neon-2));border-radius:10px}
 
-  /* WhatsApp float */
-  .wa-float{position:fixed;bottom:20px;right:20px;z-index:800;width:60px;height:60px;border-radius:50%;background:#25d366;display:flex;align-items:center;justify-content:center;color:#fff;font-size:28px;box-shadow:0 10px 30px rgba(37,211,102,.5);animation:pulseWa 2.4s infinite}
+  .wa-float{position:fixed;bottom:20px;right:20px;z-index:800;width:60px;height:60px;border-radius:50%;background:#25d366;display:flex;align-items:center;justify-content:center;color:#fff;font-size:28px;box-shadow:0 10px 30px rgba(37,211,102,.5);animation:pulseWa 2.4s infinite;text-decoration:none}
   @keyframes pulseWa{0%,100%{box-shadow:0 0 0 0 rgba(37,211,102,.5)}50%{box-shadow:0 0 0 18px rgba(37,211,102,0)}}
 
-  /* Marquee */
   .marquee{overflow:hidden;white-space:nowrap;border-top:1px solid var(--glass-border);border-bottom:1px solid var(--glass-border);padding:.8rem 0}
   .marquee-track{display:inline-flex;gap:3rem;animation:scrollX 26s linear infinite}
   @keyframes scrollX{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
-  /* Hero phone (CSS 3D fallback decoration) */
   .badge{display:inline-flex;align-items:center;gap:.45rem;padding:.35rem .8rem;border-radius:999px;background:rgba(0,240,255,.1);border:1px solid rgba(0,240,255,.3);color:var(--neon);font-size:.8rem;font-weight:600}
 
-  /* Carousel */
   .carousel{display:flex;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:1rem;scrollbar-width:none}
   .carousel::-webkit-scrollbar{display:none}
   .carousel > *{scroll-snap-align:start;flex:0 0 auto}
 
-  /* Page transitions */
   .page{animation:fadeUp .6s cubic-bezier(.2,.8,.2,1)}
   @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 
-  /* Star rating */
   .stars{color:#ffd54f;letter-spacing:1px}
-
-  /* Wishlist heart */
   .heart-btn{position:absolute;top:12px;right:12px;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.5);backdrop-filter:blur(8px);color:#fff;cursor:pointer;border:1px solid rgba(255,255,255,.15);transition:.25s;z-index:5}
   .heart-btn.active{color:#ff2bd6;background:rgba(255,43,214,.15);border-color:#ff2bd6}
-  .heart-btn:hover{transform:scale(1.1)}
 
-  /* Admin */
   .admin-stat{padding:1.2rem;border-radius:16px;border:1px solid var(--glass-border);background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.01))}
 
-  /* Light theme adjustments */
-  [data-theme="light"] .glass-strong{background:rgba(255,255,255,.85)}
-  [data-theme="light"] .product-card{background:linear-gradient(160deg,#fff,#f5f7fb);border-color:#e2e8f0}
-  [data-theme="light"] .cat-card{background:linear-gradient(160deg,#fff,#f5f7fb);border-color:#e2e8f0}
-  [data-theme="light"] .input{background:#fff;color:#0a0d1c;border-color:#e2e8f0}
-  [data-theme="light"] .btn-ghost{background:#fff;color:#0a0d1c;border-color:#e2e8f0}
-
-  /* Reveal on scroll */
   .reveal{opacity:0;transform:translateY(40px);transition:opacity .8s ease, transform .8s ease}
   .reveal.in{opacity:1;transform:translateY(0)}
 
-  /* 3D rotating ring around hero */
   .ring{position:absolute;border:1px dashed rgba(0,240,255,.3);border-radius:50%;animation:rotateRing 30s linear infinite}
   @keyframes rotateRing{to{transform:rotate(360deg)}}
 
+  .product-detail-img{
+    width:100%;height:480px;border-radius:22px;
+    background:linear-gradient(135deg,#fff,#f3f4f6);
+    display:flex;align-items:center;justify-content:center;overflow:hidden;
+    position:relative;
+  }
+  .product-detail-img img{
+    width:100%;height:100%;object-fit:contain;padding:30px;
+    transition:transform .5s ease;
+  }
+  .product-detail-img:hover img{transform:scale(1.06)}
+
+  .thumb{
+    width:80px;height:80px;border-radius:12px;background:#fff;
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;border:2px solid transparent;transition:.25s;overflow:hidden;
+  }
+  .thumb img{width:100%;height:100%;object-fit:contain;padding:6px}
+  .thumb.active{border-color:var(--neon);box-shadow:0 0 18px rgba(0,240,255,.4)}
+
   @media (max-width: 768px){
-    .viewer-canvas{height:340px}
+    .product-detail-img{height:340px}
     .cat-card{height:180px}
   }
 </style>
 </head>
 <body class="gradient-bg">
 
-<!-- ===== LOADER ===== -->
+<!-- LOADER -->
 <div id="loader">
   <div class="loader-cube">
     <div class="face f1"></div><div class="face f2"></div><div class="face f3"></div>
@@ -262,22 +239,22 @@
   <div class="text-xs uppercase tracking-[0.3em] text-gray-400">Loading the future…</div>
 </div>
 
-<!-- ===== HEADER ===== -->
+<!-- HEADER -->
 <header id="header" class="fixed top-0 left-0 w-full z-50 transition-all duration-300">
   <div class="max-w-7xl mx-auto px-4 sm:px-6">
     <div class="glass-strong mt-3 rounded-2xl flex items-center justify-between px-4 sm:px-6 py-3">
-      <a href="#" onclick="navigate('home')" class="flex items-center gap-2">
+      <a class="flex items-center gap-2 cursor-pointer" onclick="navigate('home')">
         <div class="w-9 h-9 rounded-xl flex items-center justify-center font-display font-black text-black" style="background:linear-gradient(135deg,var(--neon),var(--neon-2))">V</div>
         <span class="font-display text-xl neon-text">VOLTRIX</span>
       </a>
       <nav class="hidden lg:flex items-center gap-7">
-        <a class="nav-link" href="#" onclick="navigate('home')">Home</a>
-        <a class="nav-link" href="#" onclick="navigate('shop')">Shop</a>
-        <a class="nav-link" href="#" onclick="navigate('shop','Mobile Phones')">Mobiles</a>
-        <a class="nav-link" href="#" onclick="navigate('shop','Laptops')">Laptops</a>
-        <a class="nav-link" href="#" onclick="navigate('shop','Earbuds')">Earbuds</a>
-        <a class="nav-link" href="#" onclick="navigate('shop','Smart Watches')">Watches</a>
-        <a class="nav-link" href="#" onclick="navigate('admin')"><i class="fa-solid fa-shield-halved mr-1"></i>Admin</a>
+        <span class="nav-link" onclick="navigate('home')">Home</span>
+        <span class="nav-link" onclick="navigate('shop')">Shop</span>
+        <span class="nav-link" onclick="navigate('shop','Mobile Phones')">Mobiles</span>
+        <span class="nav-link" onclick="navigate('shop','Laptops')">Laptops</span>
+        <span class="nav-link" onclick="navigate('shop','Earbuds')">Earbuds</span>
+        <span class="nav-link" onclick="navigate('shop','Smart Watches')">Watches</span>
+        <span class="nav-link" onclick="navigate('shop','Accessories')">Accessories</span>
       </nav>
       <div class="flex items-center gap-2 sm:gap-3">
         <button class="btn-ghost !p-2 !px-3" title="Search" onclick="openSearch()"><i class="fa-solid fa-magnifying-glass"></i></button>
@@ -296,69 +273,23 @@
       </div>
     </div>
     <div id="mobileMenu" class="hidden lg:hidden glass mt-2 rounded-2xl p-3 flex flex-col gap-1">
-      <a class="nav-link" href="#" onclick="navigate('home')">Home</a>
-      <a class="nav-link" href="#" onclick="navigate('shop')">Shop</a>
-      <a class="nav-link" href="#" onclick="navigate('shop','Mobile Phones')">Mobiles</a>
-      <a class="nav-link" href="#" onclick="navigate('shop','Laptops')">Laptops</a>
-      <a class="nav-link" href="#" onclick="navigate('shop','Earbuds')">Earbuds</a>
-      <a class="nav-link" href="#" onclick="navigate('shop','Smart Watches')">Smart Watches</a>
-      <a class="nav-link" href="#" onclick="navigate('shop','Accessories')">Accessories</a>
-      <a class="nav-link" href="#" onclick="navigate('admin')">Admin</a>
+      <span class="nav-link" onclick="navigate('home')">Home</span>
+      <span class="nav-link" onclick="navigate('shop')">Shop</span>
+      <span class="nav-link" onclick="navigate('shop','Mobile Phones')">Mobiles</span>
+      <span class="nav-link" onclick="navigate('shop','Laptops')">Laptops</span>
+      <span class="nav-link" onclick="navigate('shop','Earbuds')">Earbuds</span>
+      <span class="nav-link" onclick="navigate('shop','Smart Watches')">Smart Watches</span>
+      <span class="nav-link" onclick="navigate('shop','Accessories')">Accessories</span>
     </div>
   </div>
 </header>
 
-<!-- ===== APP MOUNT ===== -->
 <main id="app" class="pt-28"></main>
 
-<!-- ===== FOOTER ===== -->
-<footer class="mt-24 border-t border-white/10">
-  <div class="max-w-7xl mx-auto px-6 py-14 grid md:grid-cols-4 gap-10">
-    <div>
-      <div class="flex items-center gap-2 mb-4">
-        <div class="w-9 h-9 rounded-xl flex items-center justify-center font-display font-black text-black" style="background:linear-gradient(135deg,var(--neon),var(--neon-2))">V</div>
-        <span class="font-display text-xl neon-text">VOLTRIX</span>
-      </div>
-      <p class="text-gray-400 text-sm">Pakistan's premier 3D-powered electronics store. Authentic gadgets, lightning delivery — Karachi to Khyber.</p>
-      <div class="flex gap-2 mt-4">
-        <a class="btn-ghost !p-2 !px-3" href="#"><i class="fa-brands fa-facebook"></i></a>
-        <a class="btn-ghost !p-2 !px-3" href="#"><i class="fa-brands fa-instagram"></i></a>
-        <a class="btn-ghost !p-2 !px-3" href="#"><i class="fa-brands fa-tiktok"></i></a>
-        <a class="btn-ghost !p-2 !px-3" href="#"><i class="fa-brands fa-whatsapp"></i></a>
-      </div>
-    </div>
-    <div>
-      <h4 class="font-display text-lg mb-3">Shop</h4>
-      <ul class="space-y-2 text-sm text-gray-400">
-        <li><a href="#" onclick="navigate('shop','Mobile Phones')">Mobile Phones</a></li>
-        <li><a href="#" onclick="navigate('shop','Laptops')">Laptops</a></li>
-        <li><a href="#" onclick="navigate('shop','Earbuds')">Earbuds</a></li>
-        <li><a href="#" onclick="navigate('shop','Smart Watches')">Smart Watches</a></li>
-        <li><a href="#" onclick="navigate('shop','Accessories')">Accessories</a></li>
-      </ul>
-    </div>
-    <div>
-      <h4 class="font-display text-lg mb-3">Support</h4>
-      <ul class="space-y-2 text-sm text-gray-400">
-        <li>📞 +92 300 1234567</li>
-        <li>✉️ support@voltrix.pk</li>
-        <li>📍 Lahore • Karachi • Islamabad</li>
-        <li>🚚 Nationwide COD available</li>
-      </ul>
-    </div>
-    <div>
-      <h4 class="font-display text-lg mb-3">Newsletter</h4>
-      <p class="text-sm text-gray-400 mb-3">Get exclusive PKR deals & new launches.</p>
-      <div class="flex gap-2">
-        <input class="input" placeholder="you@email.com">
-        <button class="btn-neon">Join</button>
-      </div>
-    </div>
-  </div>
-  <div class="text-center text-xs text-gray-500 py-5 border-t border-white/10">© 2026 VOLTRIX Pakistan. All prices in PKR (₨). Made with ⚡ in Lahore.</div>
-</footer>
+<!-- FOOTER -->
+<footer id="footerArea" class="mt-24 border-t border-white/10"></footer>
 
-<!-- ===== DRAWER ===== -->
+<!-- DRAWER -->
 <div class="overlay" id="overlay" onclick="closeDrawer()"></div>
 <aside class="drawer glass-strong" id="drawer">
   <div class="flex items-center justify-between p-5 border-b border-white/10">
@@ -369,121 +300,269 @@
   <div id="drawerFooter" class="p-5 border-t border-white/10"></div>
 </aside>
 
-<!-- ===== MODAL ===== -->
+<!-- MODAL -->
 <div class="modal" id="modal">
   <div class="modal-card glass-strong" id="modalCard"></div>
 </div>
 
-<!-- ===== TOAST ===== -->
+<!-- TOAST -->
 <div class="toast glass-strong" id="toast"><i class="fa-solid fa-circle-check text-green-400"></i><span id="toastMsg">Done</span></div>
 
-<!-- ===== WhatsApp Float ===== -->
-<a href="https://wa.me/923001234567?text=Hi%20VOLTRIX%2C%20I%20need%20help" target="_blank" class="wa-float" title="Chat on WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+<!-- WhatsApp Float (dynamic) -->
+<a id="waFloat" href="#" target="_blank" class="wa-float" title="Chat on WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
 
 <script>
 /* =========================================================
-   VOLTRIX — Pakistan 3D Electronics E-commerce (Single File)
+   VOLTRIX — Pakistan Electronics E-commerce (Single File)
    ========================================================= */
 
-/* ---------- DATA & STORAGE ---------- */
 const STORAGE = {
-  products:'voltrix_products',
+  products:'voltrix_products_v2',
   cart:'voltrix_cart',
   wishlist:'voltrix_wishlist',
   orders:'voltrix_orders',
   user:'voltrix_user',
+  users:'voltrix_users',
   theme:'voltrix_theme',
   lang:'voltrix_lang',
-  admin:'voltrix_admin_session'
+  admin:'voltrix_admin_session',
+  adminCreds:'voltrix_admin_creds',
+  contacts:'voltrix_contacts'
 };
 
-const ADMIN_CREDENTIALS = { username:'admin', password:'voltrix123' };
+/* Master admin (cannot be removed; password can be changed by admin) */
+const MASTER_ADMIN = { email:'malikshamiawan577@gmail.com', password:'AWAN7866' };
 
+/* Default contact / social info (admin-editable) */
+const DEFAULT_CONTACTS = {
+  phone:'+92 300 1234567',
+  email:'support@voltrix.pk',
+  address:'Lahore • Karachi • Islamabad',
+  whatsapp:'923001234567',
+  facebook:'https://facebook.com/',
+  instagram:'https://instagram.com/',
+  tiktok:'https://tiktok.com/',
+  twitter:'https://twitter.com/',
+  youtube:'https://youtube.com/'
+};
+
+/* PRODUCTS — Pakistani market with real CDN images */
 const DEFAULT_PRODUCTS = [
-  // Mobile Phones
+  // ===== Mobile Phones =====
   {id:'p1',name:'iPhone 15 Pro Max 256GB',category:'Mobile Phones',brand:'Apple',price:589000,oldPrice:629000,stock:12,rating:4.9,
-    color:0x111827, accent:0xa855f7, shape:'phone',
+    image:'https://images.unsplash.com/photo-1696446702183-be9bdc4ed12c?w=800&auto=format&fit=crop',
+    images:[
+      'https://images.unsplash.com/photo-1696446702183-be9bdc4ed12c?w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1592286927505-1def25115558?w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=800&auto=format&fit=crop'
+    ],
     description:'Titanium body, A17 Pro chip, 48MP camera system, ProMotion 120Hz display.',
     specs:{Display:'6.7" OLED 120Hz',Chip:'A17 Pro',RAM:'8GB',Storage:'256GB',Camera:'48MP+12MP+12MP',Battery:'4422 mAh'},
-    available:'In stock — Pakistan'},
-  {id:'p2',name:'Samsung Galaxy S24 Ultra',category:'Mobile Phones',brand:'Samsung',price:519999,oldPrice:559000,stock:9,rating:4.8,
-    color:0x1f2937, accent:0x00f0ff, shape:'phone',
-    description:'Snapdragon 8 Gen 3, 200MP camera, S Pen, AI features.',
+    available:'In stock — PTA Approved'},
+  {id:'p2',name:'Samsung Galaxy S24 Ultra 512GB',category:'Mobile Phones',brand:'Samsung',price:519999,oldPrice:559000,stock:9,rating:4.8,
+    image:'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=800&auto=format&fit=crop',
+    images:[
+      'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1567581935884-3349723552ca?w=800&auto=format&fit=crop'
+    ],
+    description:'Snapdragon 8 Gen 3, 200MP camera, S Pen, AI-powered features.',
     specs:{Display:'6.8" QHD+ AMOLED',Chip:'SD 8 Gen 3',RAM:'12GB',Storage:'512GB',Camera:'200MP',Battery:'5000 mAh'},
-    available:'In stock — Pakistan'},
+    available:'In stock — PTA Approved'},
   {id:'p3',name:'Xiaomi 14 Pro 12/512',category:'Mobile Phones',brand:'Xiaomi',price:259000,oldPrice:289000,stock:18,rating:4.7,
-    color:0x0f172a, accent:0x39ff14, shape:'phone',
-    description:'Leica optics, 120W HyperCharge, LTPO display.',
+    image:'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=800&auto=format&fit=crop',
+    images:[
+      'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1567581935884-3349723552ca?w=800&auto=format&fit=crop'
+    ],
+    description:'Leica optics, 120W HyperCharge, LTPO AMOLED display.',
     specs:{Display:'6.73" LTPO AMOLED',Chip:'SD 8 Gen 3',RAM:'12GB',Storage:'512GB',Camera:'Leica 50MP',Battery:'4880 mAh'},
     available:'In stock — Pakistan'},
   {id:'p4',name:'Infinix Note 40 Pro+ 5G',category:'Mobile Phones',brand:'Infinix',price:79999,oldPrice:89999,stock:30,rating:4.5,
-    color:0x312e81, accent:0xff2bd6, shape:'phone',
-    description:'Wireless charging, AMOLED 120Hz, MediaTek 7020 5G.',
+    image:'https://images.unsplash.com/photo-1580910051074-3eb694886505?w=800&auto=format&fit=crop',
+    images:['https://images.unsplash.com/photo-1580910051074-3eb694886505?w=800&auto=format&fit=crop'],
+    description:'Wireless charging, AMOLED 120Hz, MediaTek Dimensity 7020 5G.',
     specs:{Display:'6.78" AMOLED',Chip:'Dimensity 7020',RAM:'12GB',Storage:'256GB',Camera:'108MP',Battery:'4600 mAh'},
     available:'In stock — Pakistan'},
+  {id:'p5',name:'Tecno Camon 30 Premier 5G',category:'Mobile Phones',brand:'Tecno',price:114999,oldPrice:129999,stock:14,rating:4.4,
+    image:'https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?w=800&auto=format&fit=crop',
+    images:['https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?w=800&auto=format&fit=crop'],
+    description:'Polaroid co-engineered camera, 70W fast charge, AMOLED 120Hz.',
+    specs:{Display:'6.77" AMOLED',Chip:'Dimensity 8200',RAM:'12GB',Storage:'512GB',Camera:'50MP Polaroid',Battery:'5000 mAh'},
+    available:'In stock — Pakistan'},
+  {id:'p6',name:'Vivo V30 Pro 12/256',category:'Mobile Phones',brand:'Vivo',price:144999,oldPrice:159999,stock:20,rating:4.6,
+    image:'https://images.unsplash.com/photo-1574944985070-8f3ebc6b79d2?w=800&auto=format&fit=crop',
+    images:['https://images.unsplash.com/photo-1574944985070-8f3ebc6b79d2?w=800&auto=format&fit=crop'],
+    description:'ZEISS optics, 80W FlashCharge, AMOLED curved display.',
+    specs:{Display:'6.78" AMOLED',Chip:'Dimensity 8200',RAM:'12GB',Storage:'256GB',Camera:'ZEISS 50MP',Battery:'5000 mAh'},
+    available:'In stock — Pakistan'},
+  {id:'p7',name:'Oppo Reno 11 Pro 5G',category:'Mobile Phones',brand:'Oppo',price:139999,oldPrice:154999,stock:11,rating:4.5,
+    image:'https://images.unsplash.com/photo-1565849904461-04a58ad377e0?w=800&auto=format&fit=crop',
+    images:['https://images.unsplash.com/photo-1565849904461-04a58ad377e0?w=800&auto=format&fit=crop'],
+    description:'Portrait camera expert, 80W SUPERVOOC, sleek slim design.',
+    specs:{Display:'6.74" AMOLED',Chip:'SD 8s Gen 3',RAM:'12GB',Storage:'512GB',Camera:'50MP',Battery:'4700 mAh'},
+    available:'In stock — Pakistan'},
+  {id:'p8',name:'Realme C67 8/256',category:'Mobile Phones',brand:'Realme',price:54999,oldPrice:59999,stock:40,rating:4.3,
+    image:'https://images.unsplash.com/photo-1616348436168-de43ad0db179?w=800&auto=format&fit=crop',
+    images:['https://images.unsplash.com/photo-1616348436168-de43ad0db179?w=800&auto=format&fit=crop'],
+    description:'108MP camera, 33W SUPERVOOC, leather-textured back.',
+    specs:{Display:'6.72" FHD+',Chip:'SD 685',RAM:'8GB',Storage:'256GB',Camera:'108MP',Battery:'5000 mAh'},
+    available:'In stock — Pakistan'},
 
-  // Laptops
-  {id:'p5',name:'MacBook Pro 14" M3 Pro',category:'Laptops',brand:'Apple',price:749000,oldPrice:799000,stock:6,rating:4.9,
-    color:0x111827, accent:0x00f0ff, shape:'laptop',
+  // ===== Laptops =====
+  {id:'p9',name:'MacBook Pro 14" M3 Pro',category:'Laptops',brand:'Apple',price:749000,oldPrice:799000,stock:6,rating:4.9,
+    image:'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&auto=format&fit=crop',
+    images:[
+      'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=800&auto=format&fit=crop'
+    ],
     description:'M3 Pro chip, Liquid Retina XDR, up to 18 hours battery.',
     specs:{Display:'14.2" Liquid Retina XDR',Chip:'Apple M3 Pro',RAM:'18GB',Storage:'512GB SSD',GPU:'18-core'},
     available:'In stock — Pakistan'},
-  {id:'p6',name:'ASUS ROG Strix G16 RTX 4070',category:'Laptops',brand:'Asus',price:639000,oldPrice:699000,stock:4,rating:4.7,
-    color:0x0a0a0a, accent:0xff2bd6, shape:'laptop',
+  {id:'p10',name:'ASUS ROG Strix G16 RTX 4070',category:'Laptops',brand:'Asus',price:639000,oldPrice:699000,stock:4,rating:4.7,
+    image:'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=800&auto=format&fit=crop',
+    images:['https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=800&auto=format&fit=crop'],
     description:'Intel i9-14900HX, RTX 4070, 240Hz QHD+ panel.',
     specs:{Display:'16" QHD+ 240Hz',CPU:'i9-14900HX',RAM:'32GB',Storage:'1TB SSD',GPU:'RTX 4070 8GB'},
     available:'In stock — Pakistan'},
-  {id:'p7',name:'HP Pavilion 15 Ryzen 7',category:'Laptops',brand:'HP',price:189000,oldPrice:209000,stock:14,rating:4.4,
-    color:0x1e3a8a, accent:0x00f0ff, shape:'laptop',
-    description:'Ryzen 7 7730U, 16GB RAM, 512GB NVMe, FHD IPS.',
+  {id:'p11',name:'HP Pavilion 15 Ryzen 7',category:'Laptops',brand:'HP',price:189000,oldPrice:209000,stock:14,rating:4.4,
+    image:'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800&auto=format&fit=crop',
+    images:['https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800&auto=format&fit=crop'],
+    description:'Ryzen 7 7730U, 16GB RAM, 512GB NVMe, FHD IPS display.',
     specs:{Display:'15.6" FHD IPS',CPU:'Ryzen 7 7730U',RAM:'16GB',Storage:'512GB SSD',GPU:'Radeon'},
     available:'In stock — Pakistan'},
+  {id:'p12',name:'Dell XPS 13 Plus i7',category:'Laptops',brand:'Dell',price:449000,oldPrice:489000,stock:5,rating:4.7,
+    image:'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=800&auto=format&fit=crop',
+    images:['https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=800&auto=format&fit=crop'],
+    description:'Intel Core i7-1360P, 16GB LPDDR5, OLED 3.5K touchscreen.',
+    specs:{Display:'13.4" OLED 3.5K',CPU:'i7-1360P',RAM:'16GB',Storage:'1TB SSD',GPU:'Iris Xe'},
+    available:'In stock — Pakistan'},
+  {id:'p13',name:'Lenovo IdeaPad Slim 5 Ryzen 5',category:'Laptops',brand:'Lenovo',price:174999,oldPrice:189999,stock:12,rating:4.5,
+    image:'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800&auto=format&fit=crop',
+    images:['https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800&auto=format&fit=crop'],
+    description:'Ryzen 5 7530U, 16GB RAM, 512GB SSD, 14" FHD IPS.',
+    specs:{Display:'14" FHD IPS',CPU:'Ryzen 5 7530U',RAM:'16GB',Storage:'512GB SSD',GPU:'Radeon'},
+    available:'In stock — Pakistan'},
+  {id:'p14',name:'Acer Nitro V 15 RTX 4050',category:'Laptops',brand:'Acer',price:289000,oldPrice:319000,stock:7,rating:4.5,
+    image:'https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=800&auto=format&fit=crop',
+    images:['https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=800&auto=format&fit=crop'],
+    description:'Intel i5-13420H, RTX 4050 6GB, 144Hz FHD gaming display.',
+    specs:{Display:'15.6" FHD 144Hz',CPU:'i5-13420H',RAM:'16GB',Storage:'512GB SSD',GPU:'RTX 4050 6GB'},
+    available:'In stock — Pakistan'},
 
-  // Earbuds
-  {id:'p8',name:'Apple AirPods Pro 2 (USB-C)',category:'Earbuds',brand:'Apple',price:74999,oldPrice:79999,stock:25,rating:4.8,
-    color:0xf9fafb, accent:0x00f0ff, shape:'earbuds',
+  // ===== Earbuds =====
+  {id:'p15',name:'Apple AirPods Pro 2 (USB-C)',category:'Earbuds',brand:'Apple',price:74999,oldPrice:79999,stock:25,rating:4.8,
+    image:'https://images.unsplash.com/photo-1606220588913-b3aacb4d2f46?w=800&auto=format&fit=crop',
+    images:[
+      'https://images.unsplash.com/photo-1606220588913-b3aacb4d2f46?w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=800&auto=format&fit=crop'
+    ],
     description:'Active Noise Cancellation, Adaptive Audio, MagSafe case.',
     specs:{ANC:'Yes',Battery:'30h with case',Charging:'USB-C / MagSafe',Driver:'Custom'},
     available:'In stock — Pakistan'},
-  {id:'p9',name:'Samsung Galaxy Buds3 Pro',category:'Earbuds',brand:'Samsung',price:49999,oldPrice:54999,stock:22,rating:4.6,
-    color:0x1f2937, accent:0xa855f7, shape:'earbuds',
-    description:'Hi-Fi 24bit audio, ANC, AI live translate.',
+  {id:'p16',name:'Samsung Galaxy Buds3 Pro',category:'Earbuds',brand:'Samsung',price:49999,oldPrice:54999,stock:22,rating:4.6,
+    image:'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=800&auto=format&fit=crop',
+    images:['https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=800&auto=format&fit=crop'],
+    description:'Hi-Fi 24-bit audio, ANC, AI live translate.',
     specs:{ANC:'Yes',Battery:'26h with case',Codec:'24-bit',Sweat:'IP57'},
     available:'In stock — Pakistan'},
-  {id:'p10',name:'Haylou GT7 Neo',category:'Earbuds',brand:'Haylou',price:4499,oldPrice:5999,stock:80,rating:4.3,
-    color:0x0f172a, accent:0x39ff14, shape:'earbuds',
+  {id:'p17',name:'Haylou GT7 Neo',category:'Earbuds',brand:'Haylou',price:4499,oldPrice:5999,stock:80,rating:4.3,
+    image:'https://images.unsplash.com/photo-1655720828018-edd2daec9349?w=800&auto=format&fit=crop',
+    images:['https://images.unsplash.com/photo-1655720828018-edd2daec9349?w=800&auto=format&fit=crop'],
     description:'Affordable TWS earbuds with crisp sound and BT 5.3.',
     specs:{Battery:'24h',Bluetooth:'5.3',IP:'IPX4'},
     available:'In stock — Pakistan'},
+  {id:'p18',name:'Sony WF-1000XM5',category:'Earbuds',brand:'Sony',price:84999,oldPrice:94999,stock:8,rating:4.8,
+    image:'https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=800&auto=format&fit=crop',
+    images:['https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=800&auto=format&fit=crop'],
+    description:'Industry-leading ANC, LDAC, 24-bit audio.',
+    specs:{ANC:'Yes',Battery:'24h with case',Codec:'LDAC',Driver:'Custom 8.4mm'},
+    available:'In stock — Pakistan'},
+  {id:'p19',name:'JBL Tune 230NC TWS',category:'Earbuds',brand:'JBL',price:14999,oldPrice:17999,stock:35,rating:4.4,
+    image:'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=800&auto=format&fit=crop',
+    images:['https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=800&auto=format&fit=crop'],
+    description:'Pure Bass, Active Noise Cancellation, 40h playtime.',
+    specs:{ANC:'Yes',Battery:'40h with case',Bluetooth:'5.2',Driver:'6mm'},
+    available:'In stock — Pakistan'},
+  {id:'p20',name:'Audionic Airbuds 525',category:'Earbuds',brand:'Audionic',price:3499,oldPrice:4499,stock:120,rating:4.2,
+    image:'https://images.unsplash.com/photo-1606400082777-ef05f3c5cde2?w=800&auto=format&fit=crop',
+    images:['https://images.unsplash.com/photo-1606400082777-ef05f3c5cde2?w=800&auto=format&fit=crop'],
+    description:'Pakistani favorite — affordable TWS with strong bass.',
+    specs:{Battery:'18h with case',Bluetooth:'5.3',IP:'IPX4'},
+    available:'In stock — Pakistan'},
 
-  // Smart Watches
-  {id:'p11',name:'Apple Watch Series 9 45mm',category:'Smart Watches',brand:'Apple',price:139999,oldPrice:149999,stock:10,rating:4.8,
-    color:0x111827, accent:0xff2bd6, shape:'watch',
-    description:'S9 SiP, Double Tap, brighter display.',
+  // ===== Smart Watches =====
+  {id:'p21',name:'Apple Watch Series 9 45mm',category:'Smart Watches',brand:'Apple',price:139999,oldPrice:149999,stock:10,rating:4.8,
+    image:'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=800&auto=format&fit=crop',
+    images:[
+      'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1551816230-ef5deaed4a26?w=800&auto=format&fit=crop'
+    ],
+    description:'S9 SiP, Double Tap, brighter display, ECG.',
     specs:{Display:'Always-On Retina',Chip:'S9',Battery:'18h',Health:'ECG, SpO2'},
     available:'In stock — Pakistan'},
-  {id:'p12',name:'Samsung Galaxy Watch 6 Classic',category:'Smart Watches',brand:'Samsung',price:99999,oldPrice:109999,stock:8,rating:4.6,
-    color:0x1f2937, accent:0x00f0ff, shape:'watch',
+  {id:'p22',name:'Samsung Galaxy Watch 6 Classic',category:'Smart Watches',brand:'Samsung',price:99999,oldPrice:109999,stock:8,rating:4.6,
+    image:'https://images.unsplash.com/photo-1617043786394-f977fa12eddf?w=800&auto=format&fit=crop',
+    images:['https://images.unsplash.com/photo-1617043786394-f977fa12eddf?w=800&auto=format&fit=crop'],
     description:'Rotating bezel, Wear OS, BioActive sensor.',
     specs:{Display:'1.5" AMOLED',Chip:'Exynos W930',Battery:'40h',Health:'BioActive'},
     available:'In stock — Pakistan'},
+  {id:'p23',name:'Xiaomi Redmi Watch 4',category:'Smart Watches',brand:'Xiaomi',price:18999,oldPrice:21999,stock:30,rating:4.5,
+    image:'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=800&auto=format&fit=crop',
+    images:['https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=800&auto=format&fit=crop'],
+    description:'1.97" AMOLED, GPS, 20-day battery, BT calling.',
+    specs:{Display:'1.97" AMOLED',Battery:'20 days',GPS:'5-system',Health:'SpO2, HR'},
+    available:'In stock — Pakistan'},
+  {id:'p24',name:'Huawei Watch GT 4 46mm',category:'Smart Watches',brand:'Huawei',price:64999,oldPrice:74999,stock:12,rating:4.6,
+    image:'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&auto=format&fit=crop',
+    images:['https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&auto=format&fit=crop'],
+    description:'14-day battery, premium design, advanced health tracking.',
+    specs:{Display:'1.43" AMOLED',Battery:'14 days',GPS:'Dual-band',Health:'TruSeen 5.5+'},
+    available:'In stock — Pakistan'},
 
-  // Accessories
-  {id:'p13',name:'Anker 20000mAh Power Bank 22.5W',category:'Accessories',brand:'Anker',price:8999,oldPrice:10999,stock:60,rating:4.7,
-    color:0x0a0a0a, accent:0x00f0ff, shape:'box',
+  // ===== Accessories =====
+  {id:'p25',name:'Anker 20000mAh Power Bank 22.5W',category:'Accessories',brand:'Anker',price:8999,oldPrice:10999,stock:60,rating:4.7,
+    image:'https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=800&auto=format&fit=crop',
+    images:['https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=800&auto=format&fit=crop'],
     description:'High-capacity power bank with PD fast charging.',
     specs:{Capacity:'20000 mAh',Output:'22.5W PD',Ports:'USB-C + 2× USB-A'},
     available:'In stock — Pakistan'},
-  {id:'p14',name:'Baseus 65W GaN Charger',category:'Accessories',brand:'Baseus',price:6499,oldPrice:7999,stock:40,rating:4.6,
-    color:0x111827, accent:0x39ff14, shape:'box',
+  {id:'p26',name:'Baseus 65W GaN Charger',category:'Accessories',brand:'Baseus',price:6499,oldPrice:7999,stock:40,rating:4.6,
+    image:'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=800&auto=format&fit=crop',
+    images:['https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=800&auto=format&fit=crop'],
     description:'Compact 65W GaN charger, 3 ports, fits MacBook + phones.',
     specs:{Power:'65W',Tech:'GaN III',Ports:'2× USB-C + 1× USB-A'},
     available:'In stock — Pakistan'},
-  {id:'p15',name:'Logitech MX Master 3S',category:'Accessories',brand:'Logitech',price:32999,oldPrice:36999,stock:20,rating:4.9,
-    color:0x1f2937, accent:0xa855f7, shape:'box',
+  {id:'p27',name:'Logitech MX Master 3S',category:'Accessories',brand:'Logitech',price:32999,oldPrice:36999,stock:20,rating:4.9,
+    image:'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&auto=format&fit=crop',
+    images:['https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&auto=format&fit=crop'],
     description:'Iconic productivity mouse, 8K DPI, silent clicks.',
     specs:{DPI:'8000',Battery:'70 days',Connectivity:'BT + USB'},
     available:'In stock — Pakistan'},
+  {id:'p28',name:'Logitech K380 Multi-Device Keyboard',category:'Accessories',brand:'Logitech',price:11999,oldPrice:13999,stock:25,rating:4.6,
+    image:'https://images.unsplash.com/photo-1561112078-7d24e04c3407?w=800&auto=format&fit=crop',
+    images:['https://images.unsplash.com/photo-1561112078-7d24e04c3407?w=800&auto=format&fit=crop'],
+    description:'Slim Bluetooth keyboard, switch between 3 devices.',
+    specs:{Connectivity:'Bluetooth',Battery:'2 years',Compatibility:'Win/Mac/iOS/Android'},
+    available:'In stock — Pakistan'},
+  {id:'p29',name:'Samsung 25W Fast Charger Adapter',category:'Accessories',brand:'Samsung',price:3499,oldPrice:4499,stock:80,rating:4.5,
+    image:'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=800&auto=format&fit=crop',
+    images:['https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=800&auto=format&fit=crop'],
+    description:'Original Samsung 25W PD adapter with USB-C cable.',
+    specs:{Power:'25W',Type:'USB-C PD',Includes:'1m cable'},
+    available:'In stock — Pakistan'},
+  {id:'p30',name:'Anker 6ft USB-C Cable Pack of 3',category:'Accessories',brand:'Anker',price:2999,oldPrice:3999,stock:100,rating:4.7,
+    image:'https://images.unsplash.com/photo-1606293459339-f25fa50c5d92?w=800&auto=format&fit=crop',
+    images:['https://images.unsplash.com/photo-1606293459339-f25fa50c5d92?w=800&auto=format&fit=crop'],
+    description:'Durable nylon-braided USB-C cables, fast charging supported.',
+    specs:{Length:'6ft × 3',Speed:'Fast Charge',Durability:'12000+ bends'},
+    available:'In stock — Pakistan'},
+  {id:'p31',name:'Razer DeathAdder V3 Gaming Mouse',category:'Accessories',brand:'Razer',price:24999,oldPrice:28999,stock:18,rating:4.8,
+    image:'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=800&auto=format&fit=crop',
+    images:['https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=800&auto=format&fit=crop'],
+    description:'Esports-grade ergonomic gaming mouse, 30K DPI Focus Pro sensor.',
+    specs:{DPI:'30000',Sensor:'Focus Pro',Weight:'59g',Switches:'Optical Gen-3'},
+    available:'In stock — Pakistan'}
 ];
 
 function load(key,def){ try{ const v = localStorage.getItem(key); return v?JSON.parse(v):def }catch(e){return def} }
@@ -496,21 +575,28 @@ let state = {
   wishlist: load(STORAGE.wishlist, []),
   orders: load(STORAGE.orders, []),
   user: load(STORAGE.user, null),
+  users: load(STORAGE.users, []),
   theme: load(STORAGE.theme, 'dark'),
   lang: load(STORAGE.lang, 'EN'),
   adminLogged: load(STORAGE.admin, false),
+  adminCreds: load(STORAGE.adminCreds, MASTER_ADMIN),
+  contacts: load(STORAGE.contacts, DEFAULT_CONTACTS),
   filter:{category:'',brand:'',min:0,max:1000000,sort:'latest',q:''},
   currentRoute:'home',
-  threeInstances:[]
+  threeInstances:[],
+  currentImageIndex:0,
+  currentProduct:null
 };
 
 if(!localStorage.getItem(STORAGE.products)) save(STORAGE.products, DEFAULT_PRODUCTS);
+if(!localStorage.getItem(STORAGE.adminCreds)) save(STORAGE.adminCreds, MASTER_ADMIN);
+if(!localStorage.getItem(STORAGE.contacts)) save(STORAGE.contacts, DEFAULT_CONTACTS);
 
 document.documentElement.dataset.theme = state.theme;
 document.getElementById('themeIcon').className = state.theme==='dark'?'fa-solid fa-moon':'fa-solid fa-sun';
 document.getElementById('langLabel').textContent = state.lang;
 
-/* ---------- THEME / LANG ---------- */
+/* THEME / LANG */
 function toggleTheme(){
   state.theme = state.theme==='dark'?'light':'dark';
   document.documentElement.dataset.theme = state.theme;
@@ -525,15 +611,15 @@ function toggleLang(){
   toast(state.lang==='UR'?'زبان: اردو':'Language: English');
 }
 
-/* ---------- TOAST ---------- */
+/* TOAST */
 let toastTO;
 function toast(msg){
   document.getElementById('toastMsg').textContent = msg;
   const t=document.getElementById('toast'); t.classList.add('show');
-  clearTimeout(toastTO); toastTO=setTimeout(()=>t.classList.remove('show'),2200);
+  clearTimeout(toastTO); toastTO=setTimeout(()=>t.classList.remove('show'),2400);
 }
 
-/* ---------- THREE.JS HELPERS ---------- */
+/* THREE.JS HERO */
 function disposeAllThree(){
   state.threeInstances.forEach(inst=>{
     try{
@@ -548,139 +634,79 @@ function disposeAllThree(){
   state.threeInstances = [];
 }
 
-function createPhone(color=0x111827, accent=0xa855f7){
-  const grp = new THREE.Group();
-  const body = new THREE.Mesh(
-    new THREE.BoxGeometry(1.2, 2.4, 0.12),
-    new THREE.MeshStandardMaterial({color, metalness:.85, roughness:.25})
-  );
-  grp.add(body);
-  const screen = new THREE.Mesh(
-    new THREE.PlaneGeometry(1.05, 2.25),
-    new THREE.MeshStandardMaterial({color:0x000814, emissive:accent, emissiveIntensity:.45, metalness:.4, roughness:.2})
-  );
-  screen.position.z = 0.062;
-  grp.add(screen);
-  const camBump = new THREE.Mesh(
-    new THREE.BoxGeometry(0.45,0.45,0.05),
-    new THREE.MeshStandardMaterial({color:0x0a0a0a, metalness:.95, roughness:.2})
-  );
-  camBump.position.set(-0.3,0.85,-0.085);
-  grp.add(camBump);
-  for(let i=0;i<3;i++){
-    const lens = new THREE.Mesh(new THREE.CylinderGeometry(0.08,0.08,0.04,24),
-      new THREE.MeshStandardMaterial({color:0x000, metalness:1, roughness:.1, emissive:accent, emissiveIntensity:.2}));
-    lens.rotation.x = Math.PI/2;
-    lens.position.set(-0.42+(i%2)*0.22, 1+(i<2?0:-0.25)+(i===1?-0.22:0), -0.11);
-    grp.add(lens);
-  }
-  return grp;
-}
-function createLaptop(color=0x111827, accent=0x00f0ff){
-  const grp = new THREE.Group();
-  const base = new THREE.Mesh(new THREE.BoxGeometry(2.4,0.1,1.6),
-    new THREE.MeshStandardMaterial({color, metalness:.85, roughness:.25}));
-  grp.add(base);
-  const screenPivot = new THREE.Group(); screenPivot.position.set(0,0.05,-0.78);
-  const screen = new THREE.Mesh(new THREE.BoxGeometry(2.4,1.5,0.08),
-    new THREE.MeshStandardMaterial({color, metalness:.85, roughness:.25}));
-  screen.position.set(0,0.75,0); screenPivot.add(screen);
-  const display = new THREE.Mesh(new THREE.PlaneGeometry(2.25,1.35),
-    new THREE.MeshStandardMaterial({color:0x000, emissive:accent, emissiveIntensity:.5, roughness:.3}));
-  display.position.set(0,0.75,0.041); screenPivot.add(display);
-  screenPivot.rotation.x = -Math.PI/2.7;
-  grp.add(screenPivot);
-  // keyboard
-  const kb = new THREE.Mesh(new THREE.PlaneGeometry(2.1,1.2),
-    new THREE.MeshStandardMaterial({color:0x111, metalness:.5, roughness:.6}));
-  kb.rotation.x=-Math.PI/2; kb.position.set(0,0.06,0.05); grp.add(kb);
-  return grp;
-}
-function createEarbuds(color=0xffffff, accent=0xa855f7){
-  const grp = new THREE.Group();
-  const matBody = new THREE.MeshStandardMaterial({color, metalness:.5, roughness:.25});
-  for(let i=-1;i<=1;i+=2){
-    const ear = new THREE.Group();
-    const ball = new THREE.Mesh(new THREE.SphereGeometry(0.4,32,32), matBody);
-    ear.add(ball);
-    const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.12,0.14,0.9,24), matBody);
-    stem.position.set(0,-0.5,0); ear.add(stem);
-    const tip = new THREE.Mesh(new THREE.SphereGeometry(0.18,24,24),
-      new THREE.MeshStandardMaterial({color:accent, emissive:accent, emissiveIntensity:.5}));
-    tip.position.set(-0.25,0.05,0); ear.add(tip);
-    ear.position.x = i*0.9;
-    ear.rotation.z = i*0.25;
-    grp.add(ear);
-  }
-  return grp;
-}
-function createWatch(color=0x111827, accent=0x00f0ff){
-  const grp = new THREE.Group();
-  const body = new THREE.Mesh(new THREE.BoxGeometry(1.2,1.4,0.3),
-    new THREE.MeshStandardMaterial({color, metalness:.95, roughness:.2}));
-  grp.add(body);
-  const screen = new THREE.Mesh(new THREE.PlaneGeometry(1,1.25),
-    new THREE.MeshStandardMaterial({color:0x000, emissive:accent, emissiveIntensity:.5}));
-  screen.position.z = 0.16; grp.add(screen);
-  for(let i=-1;i<=1;i+=2){
-    const strap = new THREE.Mesh(new THREE.BoxGeometry(1.0,1.4,0.18),
-      new THREE.MeshStandardMaterial({color:0x222, roughness:.7}));
-    strap.position.y = i*1.4; grp.add(strap);
-  }
-  return grp;
-}
-function createBox(color=0x111827, accent=0x00f0ff){
-  const grp = new THREE.Group();
-  const cube = new THREE.Mesh(new THREE.BoxGeometry(1.6,1.6,1.6),
-    new THREE.MeshStandardMaterial({color, metalness:.7, roughness:.3, emissive:accent, emissiveIntensity:.08}));
-  grp.add(cube);
-  const ring = new THREE.Mesh(new THREE.TorusGeometry(1.2,0.04,16,80),
-    new THREE.MeshStandardMaterial({color:accent, emissive:accent, emissiveIntensity:.7}));
-  ring.rotation.x = Math.PI/2; grp.add(ring);
-  return grp;
-}
-function buildShape(p){
-  const c=p.color, a=p.accent;
-  switch(p.shape){
-    case 'phone': return createPhone(c,a);
-    case 'laptop': return createLaptop(c,a);
-    case 'earbuds': return createEarbuds(c,a);
-    case 'watch': return createWatch(c,a);
-    case 'box': default: return createBox(c,a);
-  }
-}
-
-function setup3DScene(canvas, opts={}){
+function initHero3D(){
+  const canvas = document.getElementById('heroCanvas');
+  if(!canvas) return;
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(45, canvas.clientWidth/canvas.clientHeight, 0.1, 100);
-  camera.position.set(0,0,opts.distance||5);
+  camera.position.set(0,0,6);
   const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true, powerPreference:'high-performance'});
   renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
   renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
 
-  const amb = new THREE.AmbientLight(0xffffff, .55); scene.add(amb);
-  const d1 = new THREE.DirectionalLight(0x00f0ff, 1.2); d1.position.set(5,5,5); scene.add(d1);
+  scene.add(new THREE.AmbientLight(0xffffff,.5));
+  const d1 = new THREE.DirectionalLight(0x00f0ff, 1.4); d1.position.set(5,5,5); scene.add(d1);
   const d2 = new THREE.DirectionalLight(0xa855f7, 1.0); d2.position.set(-5,-3,4); scene.add(d2);
-  const d3 = new THREE.DirectionalLight(0xff2bd6, .6); d3.position.set(0,5,-5); scene.add(d3);
 
-  const onResize = ()=>{
+  // Decorative rotating geometry
+  const g1 = new THREE.IcosahedronGeometry(1.4,1);
+  const m1 = new THREE.MeshStandardMaterial({color:0x0a0d1c, metalness:.85, roughness:.2, wireframe:true, emissive:0x00f0ff, emissiveIntensity:.5});
+  const ico = new THREE.Mesh(g1,m1); ico.position.set(-2.4,0.8,0); scene.add(ico);
+
+  const g2 = new THREE.TorusKnotGeometry(0.7,0.22,128,16);
+  const m2 = new THREE.MeshStandardMaterial({color:0xa855f7, metalness:.7, roughness:.25, emissive:0xa855f7, emissiveIntensity:.3});
+  const knot = new THREE.Mesh(g2,m2); knot.position.set(2.4,-0.6,0); scene.add(knot);
+
+  const g3 = new THREE.OctahedronGeometry(0.6,0);
+  const m3 = new THREE.MeshStandardMaterial({color:0xff2bd6, metalness:.8, roughness:.2, emissive:0xff2bd6, emissiveIntensity:.4});
+  const oct = new THREE.Mesh(g3,m3); oct.position.set(2.6,1.5,0); scene.add(oct);
+
+  const partGeo = new THREE.BufferGeometry();
+  const N = 600;
+  const positions = new Float32Array(N*3);
+  for(let i=0;i<N;i++){
+    positions[i*3]=(Math.random()-0.5)*20;
+    positions[i*3+1]=(Math.random()-0.5)*12;
+    positions[i*3+2]=(Math.random()-0.5)*10-2;
+  }
+  partGeo.setAttribute('position', new THREE.BufferAttribute(positions,3));
+  const partMat = new THREE.PointsMaterial({color:0x00f0ff, size:0.04, transparent:true, opacity:.6});
+  const points = new THREE.Points(partGeo, partMat); scene.add(points);
+
+  const onResize=()=>{
     if(!canvas.parentNode) return;
-    const w = canvas.clientWidth, h = canvas.clientHeight;
-    if(w&&h){
-      renderer.setSize(w,h,false);
-      camera.aspect = w/h; camera.updateProjectionMatrix();
-    }
+    const w=canvas.clientWidth,h=canvas.clientHeight;
+    if(w&&h){renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
   };
   window.addEventListener('resize', onResize);
-  return {scene,camera,renderer,onResize};
+
+  let mx=0,my=0;
+  window.addEventListener('mousemove',e=>{
+    mx=(e.clientX/window.innerWidth-.5)*0.6;
+    my=(e.clientY/window.innerHeight-.5)*0.4;
+  });
+
+  const inst={renderer, raf:null, onResize};
+  state.threeInstances.push(inst);
+  function animate(){
+    inst.raf=requestAnimationFrame(animate);
+    ico.rotation.x+=0.005; ico.rotation.y+=0.008;
+    knot.rotation.x+=0.01; knot.rotation.y+=0.012;
+    oct.rotation.x-=0.012; oct.rotation.y+=0.015;
+    points.rotation.y+=0.0008;
+    camera.position.x+=(mx*1.2-camera.position.x)*0.05;
+    camera.position.y+=(-my*0.8-camera.position.y)*0.05;
+    camera.lookAt(0,0,0);
+    renderer.render(scene,camera);
+  }
+  animate();
+  setTimeout(onResize,100);
 }
 
-/* ---------- ROUTER ---------- */
+/* ROUTER */
 function navigate(route, param){
   state.currentRoute = route;
-  closeDrawer();
-  closeModal();
-  disposeAllThree();
+  closeDrawer(); closeModal(); disposeAllThree();
   document.getElementById('mobileMenu').classList.add('hidden');
   window.scrollTo({top:0,behavior:'smooth'});
   if(route==='home') renderHome();
@@ -689,14 +715,16 @@ function navigate(route, param){
   else if(route==='admin') renderAdmin();
   else if(route==='checkout') renderCheckout();
   else if(route==='orders') renderOrders();
+  else if(route==='contact') renderContact();
   else renderHome();
-  initReveal();
+  renderFooter();
+  initRevealAnimations();
 }
 
-/* ---------- HOME ---------- */
+/* HOME */
 function renderHome(){
   const featured = state.products.slice(0,8);
-  const trending = state.products.filter(p=>p.rating>=4.6).slice(0,6);
+  const trending = state.products.filter(p=>p.rating>=4.6).slice(0,8);
 
   document.getElementById('app').innerHTML = `
   <section class="page relative overflow-hidden" style="min-height:88vh">
@@ -706,28 +734,29 @@ function renderHome(){
 
     <div class="hero-content max-w-7xl mx-auto px-6 pt-10 pb-20 grid lg:grid-cols-2 gap-10 items-center">
       <div>
-        <span class="badge"><i class="fa-solid fa-bolt"></i> Pakistan's #1 3D Tech Store</span>
+        <span class="badge"><i class="fa-solid fa-bolt"></i> Pakistan's #1 Tech Store</span>
         <h1 class="font-display text-5xl md:text-7xl font-black leading-[1.05] mt-5">
           Future Tech.<br><span class="neon-text">Delivered Today.</span>
         </h1>
-        <p class="mt-5 text-gray-400 text-lg max-w-xl">Mobiles, laptops, earbuds & gadgets — explored in immersive 3D. Authentic, warrantied, and shipped nationwide across Pakistan with COD.</p>
+        <p class="mt-5 text-gray-400 text-lg max-w-xl">Mobiles, laptops, earbuds & gadgets — authentic, warrantied, and shipped nationwide across Pakistan with COD.</p>
         <div class="flex flex-wrap gap-3 mt-7">
           <button class="btn-neon" onclick="navigate('shop')"><i class="fa-solid fa-rocket"></i> Shop Now</button>
           <button class="btn-ghost" onclick="navigate('shop','Mobile Phones')"><i class="fa-solid fa-mobile-screen"></i> Browse Mobiles</button>
         </div>
         <div class="grid grid-cols-3 gap-4 mt-10 max-w-md">
           <div class="glass p-3 text-center"><div class="font-display text-2xl neon-text">15k+</div><div class="text-xs text-gray-400">Happy customers</div></div>
-          <div class="glass p-3 text-center"><div class="font-display text-2xl neon-text">2-3 Days</div><div class="text-xs text-gray-400">Nationwide delivery</div></div>
+          <div class="glass p-3 text-center"><div class="font-display text-2xl neon-text">2-3 Days</div><div class="text-xs text-gray-400">Delivery</div></div>
           <div class="glass p-3 text-center"><div class="font-display text-2xl neon-text">100%</div><div class="text-xs text-gray-400">Authentic</div></div>
         </div>
       </div>
-      <div class="hidden lg:block"></div>
+      <div class="hidden lg:flex justify-center">
+        <div class="relative floating">
+          <img src="https://images.unsplash.com/photo-1592286927505-1def25115558?w=600&auto=format&fit=crop" class="rounded-3xl shadow-2xl" style="max-width:380px;box-shadow:0 30px 80px rgba(0,240,255,.3)" alt="Featured device">
+        </div>
+      </div>
     </div>
-
-    <div class="scroll-indicator text-gray-400 text-xs uppercase tracking-[.3em]"><i class="fa-solid fa-arrow-down animate-bounce"></i> Scroll</div>
   </section>
 
-  <!-- Marquee -->
   <div class="marquee">
     <div class="marquee-track text-gray-400">
       ${Array(2).fill().map(()=>`
@@ -737,20 +766,19 @@ function renderHome(){
         <span><i class="fa-solid fa-laptop text-xl" style="color:var(--neon-3)"></i> Asus ROG</span>
         <span><i class="fa-solid fa-headphones text-xl"></i> Sony</span>
         <span><i class="fa-solid fa-bolt text-xl" style="color:var(--accent)"></i> Anker</span>
-        <span><i class="fa-solid fa-mobile-screen text-xl"></i> Infinix</span>
+        <span><i class="fa-solid fa-mobile-screen text-xl"></i> Infinix • Tecno • Vivo • Oppo</span>
         <span><i class="fa-solid fa-shield text-xl"></i> Authentic in PKR ₨</span>
       `).join('')}
     </div>
   </div>
 
-  <!-- Categories -->
   <section class="max-w-7xl mx-auto px-6 py-20">
     <div class="flex items-end justify-between mb-10 reveal">
       <div>
         <span class="badge mb-3"><i class="fa-solid fa-layer-group"></i> Explore</span>
         <h2 class="section-title font-display">Shop by <span class="neon-text">Category</span></h2>
       </div>
-      <a href="#" onclick="navigate('shop')" class="btn-ghost">View all <i class="fa-solid fa-arrow-right"></i></a>
+      <button class="btn-ghost" onclick="navigate('shop')">View all <i class="fa-solid fa-arrow-right"></i></button>
     </div>
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
       ${[
@@ -771,7 +799,6 @@ function renderHome(){
     </div>
   </section>
 
-  <!-- Featured -->
   <section class="max-w-7xl mx-auto px-6 py-10">
     <div class="flex items-end justify-between mb-8 reveal">
       <div>
@@ -784,7 +811,6 @@ function renderHome(){
     </div>
   </section>
 
-  <!-- Trending in Pakistan -->
   <section class="max-w-7xl mx-auto px-6 py-14">
     <div class="flex items-end justify-between mb-8 reveal">
       <div>
@@ -797,7 +823,6 @@ function renderHome(){
     </div>
   </section>
 
-  <!-- Why Voltrix -->
   <section class="max-w-7xl mx-auto px-6 py-14">
     <h2 class="section-title font-display text-center mb-10 reveal">The <span class="neon-text">VOLTRIX</span> Edge</h2>
     <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -816,7 +841,6 @@ function renderHome(){
     </div>
   </section>
 
-  <!-- AI Recommendations -->
   <section class="max-w-7xl mx-auto px-6 py-14">
     <div class="glass p-8 md:p-12 relative overflow-hidden reveal">
       <div class="absolute -top-20 -right-20 w-72 h-72 rounded-full" style="background:radial-gradient(circle,rgba(168,85,247,.4),transparent 70%)"></div>
@@ -834,67 +858,18 @@ function renderHome(){
   initRevealAnimations();
 }
 
-/* ---------- HERO 3D ---------- */
-function initHero3D(){
-  const canvas = document.getElementById('heroCanvas');
-  if(!canvas) return;
-  const {scene,camera,renderer,onResize} = setup3DScene(canvas,{distance:6});
-
-  const phone = createPhone(0x0a0d1c, 0x00f0ff); phone.position.set(-2,0,0); phone.scale.setScalar(1.2);
-  const buds = createEarbuds(0xffffff, 0xa855f7); buds.position.set(2.2,0.8,0); buds.scale.setScalar(0.7);
-  const watch = createWatch(0x111827, 0xff2bd6); watch.position.set(2.5,-1.2,0); watch.scale.setScalar(0.55);
-
-  scene.add(phone, buds, watch);
-
-  // Particles
-  const partGeo = new THREE.BufferGeometry();
-  const N = 600;
-  const positions = new Float32Array(N*3);
-  for(let i=0;i<N;i++){
-    positions[i*3] = (Math.random()-0.5)*20;
-    positions[i*3+1] = (Math.random()-0.5)*12;
-    positions[i*3+2] = (Math.random()-0.5)*10 - 2;
-  }
-  partGeo.setAttribute('position', new THREE.BufferAttribute(positions,3));
-  const partMat = new THREE.PointsMaterial({color:0x00f0ff, size:0.04, transparent:true, opacity:.6});
-  const points = new THREE.Points(partGeo, partMat); scene.add(points);
-
-  let raf;
-  const inst = {renderer, raf:null, onResize};
-  state.threeInstances.push(inst);
-
-  let mx=0,my=0;
-  window.addEventListener('mousemove',e=>{
-    mx = (e.clientX/window.innerWidth - .5)*0.6;
-    my = (e.clientY/window.innerHeight - .5)*0.4;
-  });
-
-  function animate(){
-    inst.raf = requestAnimationFrame(animate);
-    phone.rotation.y += 0.012; phone.rotation.x = Math.sin(Date.now()*0.001)*0.15 + my*0.4;
-    buds.rotation.y -= 0.018; buds.rotation.x = Math.sin(Date.now()*0.0015)*0.2;
-    watch.rotation.y += 0.022; watch.rotation.x = Math.cos(Date.now()*0.0012)*0.15;
-    points.rotation.y += 0.0008;
-    camera.position.x += (mx*1.2 - camera.position.x)*0.05;
-    camera.position.y += (-my*0.8 - camera.position.y)*0.05;
-    camera.lookAt(0,0,0);
-    renderer.render(scene,camera);
-  }
-  animate();
-  setTimeout(onResize, 100);
-}
-
-/* ---------- PRODUCT CARD ---------- */
+/* PRODUCT CARD */
 function productCardHTML(p){
   const inWish = state.wishlist.includes(p.id);
+  const img = p.image || (p.images && p.images[0]) || '';
   return `
-  <div class="product-card tilt p-5 reveal" data-id="${p.id}">
+  <div class="product-card p-4 reveal" data-id="${p.id}">
     <button class="heart-btn ${inWish?'active':''}" onclick="event.stopPropagation();toggleWish('${p.id}', this)"><i class="fa-solid fa-heart"></i></button>
-    <div class="relative h-48 rounded-xl mb-4 overflow-hidden flex items-center justify-center" style="background:radial-gradient(circle at 50% 50%,rgba(0,240,255,.12),transparent 70%)" onclick="navigate('product','${p.id}')">
-      <canvas class="card-canvas w-full h-full" data-pid="${p.id}"></canvas>
+    <div class="img-wrap" onclick="navigate('product','${p.id}')">
+      <img src="${img}" alt="${p.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x400/1a1d2e/00f0ff?text=${encodeURIComponent(p.brand)}'">
       ${p.oldPrice && p.oldPrice>p.price ? `<span class="absolute top-2 left-2 text-[10px] font-bold px-2 py-1 rounded-full" style="background:linear-gradient(90deg,var(--neon-3),var(--neon-2));color:#fff">-${Math.round((1-p.price/p.oldPrice)*100)}%</span>`:''}
     </div>
-    <div class="text-xs text-gray-400 uppercase tracking-wider">${p.brand} • ${p.category}</div>
+    <div class="text-xs text-gray-400 uppercase tracking-wider mt-3">${p.brand} • ${p.category}</div>
     <h3 class="font-semibold mt-1 line-clamp-2 cursor-pointer hover:text-cyan-300" onclick="navigate('product','${p.id}')">${p.name}</h3>
     <div class="stars text-sm mt-1">${'★'.repeat(Math.round(p.rating))}<span class="text-gray-400 text-xs ml-1">(${p.rating})</span></div>
     <div class="flex items-center justify-between mt-3">
@@ -908,39 +883,7 @@ function productCardHTML(p){
   `;
 }
 
-/* Tilt + per-card 3D thumbnail */
-function attachTilt(){
-  document.querySelectorAll('.tilt').forEach(el=>{
-    el.addEventListener('mousemove',e=>{
-      const r = el.getBoundingClientRect();
-      const px = (e.clientX-r.left)/r.width - .5;
-      const py = (e.clientY-r.top)/r.height - .5;
-      el.style.transform = `perspective(900px) rotateX(${-py*8}deg) rotateY(${px*10}deg) translateZ(0)`;
-    });
-    el.addEventListener('mouseleave',()=>{ el.style.transform = ''; });
-  });
-}
-function initCardThumbnails(){
-  document.querySelectorAll('.card-canvas').forEach(c=>{
-    const pid = c.dataset.pid;
-    const p = state.products.find(x=>x.id===pid);
-    if(!p) return;
-    const {scene,camera,renderer,onResize} = setup3DScene(c,{distance:4});
-    const obj = buildShape(p); obj.scale.setScalar(0.95); scene.add(obj);
-    const inst = {renderer, raf:null, onResize};
-    state.threeInstances.push(inst);
-    function loop(){
-      inst.raf = requestAnimationFrame(loop);
-      obj.rotation.y += 0.012;
-      obj.rotation.x = Math.sin(Date.now()*0.001)*0.18;
-      renderer.render(scene,camera);
-    }
-    loop();
-    setTimeout(onResize,80);
-  });
-}
-
-/* ---------- SHOP ---------- */
+/* SHOP */
 function renderShop(){
   const cats = [...new Set(state.products.map(p=>p.category))];
   const brands = [...new Set(state.products.map(p=>p.brand))];
@@ -1029,38 +972,40 @@ function renderShopGrid(){
     grid.innerHTML = `<div class="col-span-full glass p-10 text-center"><i class="fa-solid fa-box-open text-4xl neon-text"></i><p class="mt-3 text-gray-400">No products match your filters.</p></div>`;
     return;
   }
-  disposeAllThree();
   grid.innerHTML = list.map(productCardHTML).join('');
   initRevealAnimations();
-  attachTilt();
-  initCardThumbnails();
 }
 
-/* ---------- PRODUCT DETAIL ---------- */
+/* PRODUCT DETAIL */
 function renderProduct(id){
   const p = state.products.find(x=>x.id===id);
   if(!p){ navigate('shop'); return; }
+  state.currentProduct = p;
+  state.currentImageIndex = 0;
   const related = state.products.filter(x=>x.category===p.category && x.id!==p.id).slice(0,8);
+  const images = (p.images && p.images.length)?p.images:[p.image];
 
   document.getElementById('app').innerHTML = `
     <section class="page max-w-7xl mx-auto px-6 py-10">
-      <div class="text-sm text-gray-400 mb-5"><a class="hover:text-cyan-300 cursor-pointer" onclick="navigate('home')">Home</a> / <a class="hover:text-cyan-300 cursor-pointer" onclick="navigate('shop')">Shop</a> / <a class="hover:text-cyan-300 cursor-pointer" onclick="navigate('shop','${p.category}')">${p.category}</a> / <span class="text-white">${p.name}</span></div>
+      <div class="text-sm text-gray-400 mb-5"><span class="hover:text-cyan-300 cursor-pointer" onclick="navigate('home')">Home</span> / <span class="hover:text-cyan-300 cursor-pointer" onclick="navigate('shop')">Shop</span> / <span class="hover:text-cyan-300 cursor-pointer" onclick="navigate('shop','${p.category}')">${p.category}</span> / <span class="text-white">${p.name}</span></div>
 
       <div class="grid lg:grid-cols-2 gap-10">
-        <div class="glass p-4">
-          <canvas id="viewerCanvas" class="viewer-canvas"></canvas>
-          <div class="flex items-center justify-between mt-4 px-2">
-            <div class="text-xs text-gray-400 uppercase tracking-widest">3D Interactive Viewer • Drag to rotate • Scroll to zoom</div>
-            <div class="flex gap-2">
-              <button class="btn-ghost !p-2 !px-3" onclick="resetViewer()" title="Reset view"><i class="fa-solid fa-arrows-rotate"></i></button>
-              <button class="btn-ghost !p-2 !px-3" onclick="autoRotateToggle()" title="Auto rotate"><i class="fa-solid fa-rotate"></i></button>
-            </div>
+        <div>
+          <div class="product-detail-img glass" id="mainImageWrap">
+            <img id="mainImage" src="${images[0]}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/600x600/1a1d2e/00f0ff?text=${encodeURIComponent(p.brand)}'">
+          </div>
+          <div class="flex gap-3 mt-4 overflow-x-auto pb-1">
+            ${images.map((img,i)=>`
+              <div class="thumb ${i===0?'active':''}" onclick="selectImage(${i})">
+                <img src="${img}" alt="" onerror="this.src='https://via.placeholder.com/100x100/eee/999?text=•'">
+              </div>
+            `).join('')}
           </div>
         </div>
         <div>
           <span class="badge"><i class="fa-solid fa-tag"></i> ${p.brand}</span>
           <h1 class="font-display text-3xl md:text-4xl font-bold mt-3">${p.name}</h1>
-          <div class="flex items-center gap-3 mt-2 text-sm">
+          <div class="flex items-center gap-3 mt-2 text-sm flex-wrap">
             <span class="stars">${'★'.repeat(Math.round(p.rating))}</span>
             <span class="text-gray-400">${p.rating} rating</span>
             <span class="text-gray-500">|</span>
@@ -1088,7 +1033,7 @@ function renderProduct(id){
           </div>
 
           <div class="grid grid-cols-3 gap-3 mt-6">
-            <div class="glass p-3 text-center"><i class="fa-solid fa-truck-fast neon-text text-xl"></i><div class="text-xs mt-1">Free Delivery in 2-3 days</div></div>
+            <div class="glass p-3 text-center"><i class="fa-solid fa-truck-fast neon-text text-xl"></i><div class="text-xs mt-1">Free Delivery 2-3 days</div></div>
             <div class="glass p-3 text-center"><i class="fa-solid fa-shield-halved neon-text text-xl"></i><div class="text-xs mt-1">1 Year Warranty</div></div>
             <div class="glass p-3 text-center"><i class="fa-solid fa-money-bill-wave neon-text text-xl"></i><div class="text-xs mt-1">Cash on Delivery</div></div>
           </div>
@@ -1104,64 +1049,21 @@ function renderProduct(id){
       </div>`:''}
     </section>
   `;
-
-  initProductViewer(p);
   initRevealAnimations();
-  attachTilt();
-  initCardThumbnails();
 }
-
-let viewerObj=null, viewerInst=null, viewerAuto=true;
-function initProductViewer(p){
-  const canvas = document.getElementById('viewerCanvas');
-  if(!canvas) return;
-  const {scene,camera,renderer,onResize} = setup3DScene(canvas,{distance:5});
-  const obj = buildShape(p); obj.scale.setScalar(1.2); scene.add(obj);
-  // floor reflection
-  const grid = new THREE.GridHelper(8,16,0x00f0ff,0x111122); grid.position.y=-1.6; scene.add(grid);
-
-  viewerObj = obj; viewerAuto = true;
-  const inst = {renderer, raf:null, onResize};
-  viewerInst = inst;
-  state.threeInstances.push(inst);
-
-  // Drag rotate
-  let drag=false, lx=0, ly=0;
-  canvas.addEventListener('mousedown',e=>{drag=true;lx=e.clientX;ly=e.clientY;viewerAuto=false});
-  window.addEventListener('mouseup',()=>drag=false);
-  window.addEventListener('mousemove',e=>{
-    if(!drag) return;
-    obj.rotation.y += (e.clientX-lx)*0.01;
-    obj.rotation.x += (e.clientY-ly)*0.01;
-    lx=e.clientX; ly=e.clientY;
-  });
-  canvas.addEventListener('touchstart',e=>{drag=true;lx=e.touches[0].clientX;ly=e.touches[0].clientY;viewerAuto=false},{passive:true});
-  canvas.addEventListener('touchend',()=>drag=false);
-  canvas.addEventListener('touchmove',e=>{
-    if(!drag) return;
-    obj.rotation.y += (e.touches[0].clientX-lx)*0.01;
-    obj.rotation.x += (e.touches[0].clientY-ly)*0.01;
-    lx=e.touches[0].clientX; ly=e.touches[0].clientY;
-  },{passive:true});
-
-  // Wheel zoom
-  canvas.addEventListener('wheel',e=>{
-    e.preventDefault();
-    camera.position.z = Math.min(10, Math.max(2.5, camera.position.z + e.deltaY*0.005));
-  },{passive:false});
-
-  function loop(){
-    inst.raf = requestAnimationFrame(loop);
-    if(viewerAuto) obj.rotation.y += 0.008;
-    renderer.render(scene,camera);
+function selectImage(i){
+  const p = state.currentProduct; if(!p) return;
+  const images = (p.images && p.images.length)?p.images:[p.image];
+  state.currentImageIndex = i;
+  const main = document.getElementById('mainImage');
+  if(main){
+    main.style.opacity = '0';
+    setTimeout(()=>{ main.src = images[i]; main.style.opacity='1'; }, 150);
   }
-  loop();
-  setTimeout(onResize,80);
+  document.querySelectorAll('.thumb').forEach((t,idx)=>t.classList.toggle('active', idx===i));
 }
-function resetViewer(){ if(viewerObj){ viewerObj.rotation.set(0,0,0); } }
-function autoRotateToggle(){ viewerAuto = !viewerAuto; toast(viewerAuto?'Auto-rotate ON':'Auto-rotate OFF'); }
 
-/* ---------- CART / WISHLIST ---------- */
+/* CART / WISHLIST */
 function addToCart(id, qty=1, animate=true){
   const p = state.products.find(x=>x.id===id);
   if(!p) return;
@@ -1173,11 +1075,7 @@ function addToCart(id, qty=1, animate=true){
   toast(`${p.name} added to cart`);
   if(animate){
     const cartBtn = document.querySelector('[title="Cart"]');
-    if(cartBtn){
-      cartBtn.animate([
-        {transform:'scale(1)'},{transform:'scale(1.4)',boxShadow:'0 0 30px rgba(0,240,255,.7)'},{transform:'scale(1)'}
-      ],{duration:500});
-    }
+    if(cartBtn) cartBtn.animate([{transform:'scale(1)'},{transform:'scale(1.4)'},{transform:'scale(1)'}],{duration:500});
   }
 }
 function removeFromCart(id){ state.cart = state.cart.filter(c=>c.id!==id); save(STORAGE.cart,state.cart); updateBadges(); renderDrawer('cart'); }
@@ -1201,7 +1099,7 @@ function updateBadges(){
 function buyNow(id){ addToCart(id,1,false); navigate('checkout'); }
 function cartTotal(){ return state.cart.reduce((s,c)=>{ const p=state.products.find(x=>x.id===c.id); return s+(p?p.price*c.qty:0)},0); }
 
-/* ---------- DRAWERS ---------- */
+/* DRAWERS */
 function openDrawer(type){
   document.getElementById('overlay').classList.add('show');
   document.getElementById('drawer').classList.add('open');
@@ -1225,9 +1123,10 @@ function renderDrawer(type){
     }
     body.innerHTML = state.cart.map(c=>{
       const p = state.products.find(x=>x.id===c.id); if(!p) return '';
+      const img = p.image || (p.images && p.images[0]) || '';
       return `
         <div class="flex gap-3 mb-4 glass p-3">
-          <div class="w-20 h-20 rounded-lg flex items-center justify-center" style="background:radial-gradient(circle,rgba(0,240,255,.15),transparent)"><i class="fa-solid ${iconForCat(p.category)} text-3xl neon-text"></i></div>
+          <div class="w-20 h-20 rounded-lg overflow-hidden bg-white flex items-center justify-center"><img src="${img}" class="w-full h-full object-contain p-1" onerror="this.style.display='none'"></div>
           <div class="flex-1 min-w-0">
             <div class="text-sm font-semibold truncate">${p.name}</div>
             <div class="text-xs text-gray-400">${p.brand}</div>
@@ -1239,8 +1138,7 @@ function renderDrawer(type){
               <button class="ml-auto text-red-400 text-xs" onclick="removeFromCart('${c.id}')"><i class="fa-solid fa-trash"></i></button>
             </div>
           </div>
-        </div>
-      `;
+        </div>`;
     }).join('');
     foot.innerHTML = `
       <div class="flex justify-between mb-2 text-sm text-gray-400"><span>Subtotal</span><span>${pkr(cartTotal())}</span></div>
@@ -1258,22 +1156,37 @@ function renderDrawer(type){
     }
     body.innerHTML = state.wishlist.map(id=>{
       const p = state.products.find(x=>x.id===id); if(!p) return '';
+      const img = p.image || (p.images && p.images[0]) || '';
       return `
         <div class="flex gap-3 mb-4 glass p-3 items-center">
-          <div class="w-16 h-16 rounded-lg flex items-center justify-center" style="background:radial-gradient(circle,rgba(255,43,214,.15),transparent)"><i class="fa-solid ${iconForCat(p.category)} text-2xl text-pink-400"></i></div>
+          <div class="w-16 h-16 rounded-lg overflow-hidden bg-white flex items-center justify-center"><img src="${img}" class="w-full h-full object-contain p-1"></div>
           <div class="flex-1">
             <div class="text-sm font-semibold">${p.name}</div>
             <div class="font-display text-sm neon-text">${pkr(p.price)}</div>
           </div>
           <button class="btn-neon !py-1 !px-2 !text-xs" onclick="addToCart('${p.id}');toggleWish('${p.id}');renderDrawer('wishlist')"><i class="fa-solid fa-cart-plus"></i></button>
-        </div>
-      `;
+        </div>`;
     }).join('');
     foot.innerHTML = '';
   }
   else if(type==='account'){
-    titleEl.textContent = state.user?'My Account':'Login / Sign up';
-    if(state.user){
+    if(state.adminLogged){
+      titleEl.textContent = 'Admin Account';
+      body.innerHTML = `
+        <div class="glass p-4 mb-4">
+          <div class="text-sm text-gray-400">Logged in as</div>
+          <div class="font-display text-xl neon-text">Administrator</div>
+          <div class="text-xs text-gray-400">${state.adminCreds.email}</div>
+          <span class="badge mt-2"><i class="fa-solid fa-shield-halved"></i> Admin Access</span>
+        </div>
+        <button class="btn-neon w-full justify-center mb-2" onclick="closeDrawer();navigate('admin')"><i class="fa-solid fa-gauge-high"></i> Open Admin Dashboard</button>
+        <button class="btn-ghost w-full justify-center mb-2" onclick="closeDrawer();openChangePasswordModal('admin')"><i class="fa-solid fa-key"></i> Change Admin Password</button>
+        <button class="btn-ghost w-full justify-center text-red-400" onclick="logoutAdmin()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+      `;
+      foot.innerHTML = '';
+    }
+    else if(state.user){
+      titleEl.textContent = 'My Account';
       body.innerHTML = `
         <div class="glass p-4 mb-4">
           <div class="text-sm text-gray-400">Logged in as</div>
@@ -1282,10 +1195,12 @@ function renderDrawer(type){
         </div>
         <button class="btn-ghost w-full justify-center mb-2" onclick="closeDrawer();navigate('orders')"><i class="fa-solid fa-box"></i> Track My Orders</button>
         <button class="btn-ghost w-full justify-center mb-2" onclick="closeDrawer();openDrawer('wishlist')"><i class="fa-solid fa-heart"></i> Wishlist</button>
+        <button class="btn-ghost w-full justify-center mb-2" onclick="closeDrawer();openChangePasswordModal('user')"><i class="fa-solid fa-key"></i> Change Password</button>
         <button class="btn-ghost w-full justify-center text-red-400" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
       `;
       foot.innerHTML = '';
     } else {
+      titleEl.textContent = 'Login / Sign up';
       body.innerHTML = `
         <div class="flex gap-2 mb-4">
           <div class="tab active" id="tabLogin" onclick="switchAuth('login')">Login</div>
@@ -1305,45 +1220,105 @@ function switchAuth(t){
 function authForm(t){
   if(t==='login') return `
     <label class="label">Email</label><input id="lEmail" class="input mb-3" placeholder="you@email.com">
-    <label class="label">Password</label><input id="lPass" type="password" class="input mb-4">
-    <button class="btn-neon w-full justify-center" onclick="login()">Login</button>
-    <p class="text-xs text-gray-400 mt-3 text-center">Demo: any email + password works.</p>
+    <label class="label">Password</label><input id="lPass" type="password" class="input mb-4" placeholder="Enter password">
+    <button class="btn-neon w-full justify-center" onclick="login()"><i class="fa-solid fa-right-to-bracket"></i> Login</button>
   `;
   return `
     <label class="label">Full Name</label><input id="sName" class="input mb-3">
     <label class="label">Email</label><input id="sEmail" class="input mb-3">
     <label class="label">Password</label><input id="sPass" type="password" class="input mb-4">
-    <button class="btn-neon w-full justify-center" onclick="signup()">Create Account</button>
+    <button class="btn-neon w-full justify-center" onclick="signup()"><i class="fa-solid fa-user-plus"></i> Create Account</button>
   `;
 }
 function login(){
-  const e = document.getElementById('lEmail').value.trim();
+  const e = document.getElementById('lEmail').value.trim().toLowerCase();
   const p = document.getElementById('lPass').value;
   if(!e||!p){ toast('Enter email & password'); return; }
-  state.user = {name:e.split('@')[0], email:e};
-  save(STORAGE.user, state.user); toast('Welcome back!'); renderDrawer('account');
+  // Admin login check (master admin email or current adminCreds)
+  if(e === state.adminCreds.email.toLowerCase() && p === state.adminCreds.password){
+    state.adminLogged = true; save(STORAGE.admin, true);
+    toast('Welcome, Admin');
+    closeDrawer();
+    navigate('admin');
+    return;
+  }
+  // Regular user login
+  const user = state.users.find(u=>u.email.toLowerCase()===e && u.password===p);
+  if(user){
+    state.user = {name:user.name, email:user.email};
+    save(STORAGE.user, state.user);
+    toast('Welcome back, '+user.name+'!');
+    renderDrawer('account');
+  } else {
+    toast('Invalid email or password');
+  }
 }
 function signup(){
   const n = document.getElementById('sName').value.trim();
   const e = document.getElementById('sEmail').value.trim();
   const p = document.getElementById('sPass').value;
   if(!n||!e||!p){ toast('Fill all fields'); return; }
+  if(p.length<4){ toast('Password too short'); return; }
+  if(state.users.find(u=>u.email.toLowerCase()===e.toLowerCase())){ toast('Email already registered'); return; }
+  if(e.toLowerCase()===state.adminCreds.email.toLowerCase()){ toast('This email is reserved'); return; }
+  state.users.push({name:n, email:e, password:p, joined:Date.now()});
+  save(STORAGE.users, state.users);
   state.user = {name:n, email:e};
-  save(STORAGE.user, state.user); toast('Account created!'); renderDrawer('account');
+  save(STORAGE.user, state.user);
+  toast('Account created!');
+  renderDrawer('account');
 }
 function logout(){ state.user=null; save(STORAGE.user,null); toast('Logged out'); renderDrawer('account'); }
+function logoutAdmin(){ state.adminLogged=false; save(STORAGE.admin,false); toast('Admin logged out'); closeDrawer(); navigate('home'); }
 
-function iconForCat(cat){
-  return {
-    'Mobile Phones':'fa-mobile-screen-button',
-    'Laptops':'fa-laptop',
-    'Earbuds':'fa-headphones',
-    'Smart Watches':'fa-stopwatch',
-    'Accessories':'fa-plug'
-  }[cat]||'fa-box';
+/* CHANGE PASSWORD MODAL */
+function openChangePasswordModal(type){
+  const isAdmin = type==='admin';
+  const html = `
+    <div class="p-6">
+      <div class="flex justify-between items-center mb-5">
+        <h3 class="font-display text-xl"><i class="fa-solid fa-key neon-text"></i> Change ${isAdmin?'Admin ':''}Password</h3>
+        <button class="btn-ghost !p-2 !px-3" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <label class="label">Current Password</label>
+      <input id="cpCurr" type="password" class="input mb-3" placeholder="Enter current password">
+      <label class="label">New Password</label>
+      <input id="cpNew" type="password" class="input mb-3" placeholder="Min 4 characters">
+      <label class="label">Confirm New Password</label>
+      <input id="cpConfirm" type="password" class="input mb-5" placeholder="Re-enter new password">
+      <div class="flex justify-end gap-2">
+        <button class="btn-ghost" onclick="closeModal()">Cancel</button>
+        <button class="btn-neon" onclick="changePassword('${type}')"><i class="fa-solid fa-save"></i> Update Password</button>
+      </div>
+    </div>`;
+  openModal(html);
+}
+function changePassword(type){
+  const curr = document.getElementById('cpCurr').value;
+  const np = document.getElementById('cpNew').value;
+  const cf = document.getElementById('cpConfirm').value;
+  if(!curr||!np||!cf){ toast('Fill all fields'); return; }
+  if(np.length<4){ toast('Password too short'); return; }
+  if(np!==cf){ toast('Passwords do not match'); return; }
+
+  if(type==='admin'){
+    if(curr !== state.adminCreds.password){ toast('Current password incorrect'); return; }
+    state.adminCreds = {...state.adminCreds, password: np};
+    save(STORAGE.adminCreds, state.adminCreds);
+    toast('Admin password updated successfully');
+    closeModal();
+  } else {
+    const user = state.users.find(u=>u.email.toLowerCase()===state.user.email.toLowerCase());
+    if(!user){ toast('User not found'); return; }
+    if(user.password !== curr){ toast('Current password incorrect'); return; }
+    user.password = np;
+    save(STORAGE.users, state.users);
+    toast('Password updated successfully');
+    closeModal();
+  }
 }
 
-/* ---------- CHECKOUT ---------- */
+/* CHECKOUT */
 function renderCheckout(){
   if(state.cart.length===0){
     document.getElementById('app').innerHTML = `
@@ -1430,7 +1405,8 @@ function placeOrder(){
     zip: document.getElementById('cZip').value,
     payment: document.querySelector('input[name=pay]:checked').value,
     items, total: cartTotal(),
-    status:'pending', date:new Date().toISOString()
+    status:'pending', date:new Date().toISOString(),
+    customerEmail: state.user?.email || ''
   };
   state.orders.unshift(order);
   save(STORAGE.orders, state.orders);
@@ -1449,16 +1425,17 @@ function showOrderSuccess(order){
         <div class="flex justify-between mt-2"><span class="text-gray-400">Delivery to</span><span>${order.city}, ${order.province}</span></div>
         <div class="flex justify-between mt-2"><span class="text-gray-400">Status</span><span class="text-yellow-400">⏳ Pending</span></div>
       </div>
-      <div class="flex gap-3 justify-center mt-6">
+      <div class="flex gap-3 justify-center mt-6 flex-wrap">
         <button class="btn-neon" onclick="navigate('orders')">Track Order</button>
         <button class="btn-ghost" onclick="navigate('shop')">Continue Shopping</button>
       </div>
     </section>`;
 }
 
-/* ---------- ORDERS ---------- */
+/* ORDERS */
 function renderOrders(){
-  const list = state.orders;
+  let list = state.orders;
+  if(state.user) list = list.filter(o => !o.customerEmail || o.customerEmail.toLowerCase()===state.user.email.toLowerCase());
   document.getElementById('app').innerHTML = `
     <section class="page max-w-5xl mx-auto px-6 py-10">
       <h1 class="section-title font-display mb-6">My <span class="neon-text">Orders</span></h1>
@@ -1480,7 +1457,6 @@ function renderOrders(){
           <hr class="border-white/10 my-3">
           ${o.items.map(it=>`<div class="text-sm flex justify-between"><span>${it.name} × ${it.qty}</span><span>${pkr(it.price*it.qty)}</span></div>`).join('')}
           <div class="text-xs text-gray-400 mt-3"><i class="fa-solid fa-location-dot"></i> ${o.address}, ${o.city}</div>
-          <!-- Tracking timeline -->
           <div class="grid grid-cols-4 gap-2 mt-4">
             ${['pending','confirmed','shipped','delivered'].map((s,i)=>{
               const idx = ['pending','confirmed','shipped','delivered'].indexOf(o.status);
@@ -1492,54 +1468,34 @@ function renderOrders(){
     </section>`;
 }
 
-/* ---------- ADMIN ---------- */
+/* ADMIN — accessed only via login */
 function renderAdmin(){
   if(!state.adminLogged){
-    document.getElementById('app').innerHTML = `
-      <section class="page max-w-md mx-auto px-6 py-20">
-        <div class="glass p-8 text-center">
-          <i class="fa-solid fa-shield-halved text-5xl neon-text"></i>
-          <h2 class="font-display text-2xl mt-3">Admin Login</h2>
-          <p class="text-xs text-gray-400 mt-1">Secure dashboard access</p>
-          <div class="text-left mt-6">
-            <label class="label">Username</label><input id="aUser" class="input mb-3" value="admin">
-            <label class="label">Password</label><input id="aPass" type="password" class="input mb-5" placeholder="••••••••">
-            <button class="btn-neon w-full justify-center" onclick="adminLogin()"><i class="fa-solid fa-right-to-bracket"></i> Login</button>
-            <p class="text-[11px] text-gray-500 mt-3">Demo credentials: <span class="neon-text">admin / voltrix123</span></p>
-          </div>
-        </div>
-      </section>`;
+    toast('Admin access required');
+    navigate('home');
+    setTimeout(()=>openDrawer('account'), 400);
     return;
   }
   renderAdminDashboard();
 }
-function adminLogin(){
-  const u = document.getElementById('aUser').value;
-  const p = document.getElementById('aPass').value;
-  if(u===ADMIN_CREDENTIALS.username && p===ADMIN_CREDENTIALS.password){
-    state.adminLogged = true; save(STORAGE.admin, true); toast('Welcome, Admin'); renderAdmin();
-  } else toast('Invalid credentials');
-}
-function adminLogout(){ state.adminLogged=false; save(STORAGE.admin,false); toast('Logged out'); navigate('home'); }
 
 let adminTab='dashboard';
 function renderAdminDashboard(){
-  const totalSales = state.orders.reduce((s,o)=>s+o.total,0);
-  const pendingCount = state.orders.filter(o=>o.status==='pending').length;
-  const productsCount = state.products.length;
-  const ordersCount = state.orders.length;
-
   document.getElementById('app').innerHTML = `
     <section class="page max-w-7xl mx-auto px-6 py-10">
       <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
         <div>
           <span class="badge"><i class="fa-solid fa-shield"></i> Admin Panel</span>
           <h1 class="section-title font-display">Voltrix <span class="neon-text">Dashboard</span></h1>
+          <p class="text-xs text-gray-400 mt-1">Logged in as ${state.adminCreds.email}</p>
         </div>
-        <button class="btn-ghost" onclick="adminLogout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+        <div class="flex gap-2 flex-wrap">
+          <button class="btn-ghost" onclick="openChangePasswordModal('admin')"><i class="fa-solid fa-key"></i> Change Password</button>
+          <button class="btn-ghost" onclick="logoutAdmin()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+        </div>
       </div>
       <div class="flex gap-2 mb-6 flex-wrap">
-        ${['dashboard','products','orders','categories'].map(t=>`<div class="tab ${adminTab===t?'active':''}" onclick="adminSetTab('${t}')">${t.toUpperCase()}</div>`).join('')}
+        ${['dashboard','products','orders','categories','customers','contacts'].map(t=>`<div class="tab ${adminTab===t?'active':''}" onclick="adminSetTab('${t}')">${t.toUpperCase()}</div>`).join('')}
       </div>
       <div id="adminBody"></div>
     </section>`;
@@ -1552,6 +1508,8 @@ function adminRenderBody(){
   else if(adminTab==='products') body.innerHTML = adminProductsHTML();
   else if(adminTab==='orders') body.innerHTML = adminOrdersHTML();
   else if(adminTab==='categories') body.innerHTML = adminCategoriesHTML();
+  else if(adminTab==='customers') body.innerHTML = adminCustomersHTML();
+  else if(adminTab==='contacts') body.innerHTML = adminContactsHTML();
 }
 function adminDashboardHTML(){
   const totalSales = state.orders.reduce((s,o)=>s+o.total,0);
@@ -1565,8 +1523,8 @@ function adminDashboardHTML(){
       <div class="admin-stat"><div class="text-xs text-gray-400 uppercase">Delivered</div><div class="font-display text-2xl text-green-400">${deliveredCount}</div></div>
       <div class="admin-stat"><div class="text-xs text-gray-400 uppercase">Products</div><div class="font-display text-2xl">${state.products.length}</div></div>
       <div class="admin-stat"><div class="text-xs text-gray-400 uppercase">Categories</div><div class="font-display text-2xl">${[...new Set(state.products.map(p=>p.category))].length}</div></div>
-      <div class="admin-stat"><div class="text-xs text-gray-400 uppercase">Brands</div><div class="font-display text-2xl">${[...new Set(state.products.map(p=>p.brand))].length}</div></div>
-      <div class="admin-stat"><div class="text-xs text-gray-400 uppercase">In Wishlists</div><div class="font-display text-2xl">${state.wishlist.length}</div></div>
+      <div class="admin-stat"><div class="text-xs text-gray-400 uppercase">Customers</div><div class="font-display text-2xl">${state.users.length}</div></div>
+      <div class="admin-stat"><div class="text-xs text-gray-400 uppercase">Wishlist Items</div><div class="font-display text-2xl">${state.wishlist.length}</div></div>
     </div>
     <div class="grid lg:grid-cols-2 gap-5 mt-6">
       <div class="glass p-5">
@@ -1604,11 +1562,13 @@ function adminProductsTable(list){
         <tr><th class="p-3">Product</th><th class="p-3">Brand</th><th class="p-3">Category</th><th class="p-3">Price</th><th class="p-3">Stock</th><th class="p-3 text-right">Actions</th></tr>
       </thead>
       <tbody>
-        ${list.map(p=>`
+        ${list.map(p=>{
+          const img = p.image || (p.images && p.images[0]) || '';
+          return `
           <tr class="border-b border-white/5 hover:bg-white/5">
             <td class="p-3">
               <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background:radial-gradient(circle,rgba(0,240,255,.15),transparent)"><i class="fa-solid ${iconForCat(p.category)} neon-text"></i></div>
+                <div class="w-12 h-12 rounded-lg overflow-hidden bg-white flex items-center justify-center"><img src="${img}" class="w-full h-full object-contain p-1" onerror="this.src='https://via.placeholder.com/50'"></div>
                 <div class="font-semibold">${p.name}</div>
               </div>
             </td>
@@ -1620,7 +1580,8 @@ function adminProductsTable(list){
               <button class="btn-ghost !p-1 !px-2 !text-xs" onclick="openProductModal('${p.id}')"><i class="fa-solid fa-pen"></i></button>
               <button class="btn-ghost !p-1 !px-2 !text-xs text-red-400" onclick="deleteProduct('${p.id}')"><i class="fa-solid fa-trash"></i></button>
             </td>
-          </tr>`).join('')}
+          </tr>`;
+        }).join('')}
       </tbody>
     </table>`;
 }
@@ -1639,7 +1600,6 @@ function deleteProduct(id){
 function openProductModal(id){
   const p = id?state.products.find(x=>x.id===id):null;
   const cats = ['Mobile Phones','Laptops','Earbuds','Smart Watches','Accessories'];
-  const shapes = ['phone','laptop','earbuds','watch','box'];
   const html = `
     <div class="p-6">
       <div class="flex justify-between items-center mb-5">
@@ -1654,11 +1614,10 @@ function openProductModal(id){
         <div><label class="label">Old Price (PKR)</label><input id="pmOld" type="number" class="input" value="${p?.oldPrice||0}"></div>
         <div><label class="label">Stock</label><input id="pmStock" type="number" class="input" value="${p?.stock||0}"></div>
         <div><label class="label">Rating</label><input id="pmRating" type="number" step="0.1" max="5" class="input" value="${p?.rating||4.5}"></div>
+        <div class="sm:col-span-2"><label class="label">Main Image URL</label><input id="pmImage" class="input" value="${p?.image||''}" placeholder="https://..."></div>
+        <div class="sm:col-span-2"><label class="label">Additional Image URLs (one per line, optional)</label><textarea id="pmImages" class="input" rows="3">${p?.images?p.images.join('\n'):''}</textarea></div>
         <div class="sm:col-span-2"><label class="label">Description</label><textarea id="pmDesc" class="input" rows="3">${p?.description||''}</textarea></div>
-        <div><label class="label">3D Shape</label><select id="pmShape" class="input">${shapes.map(s=>`<option ${p?.shape===s?'selected':''}>${s}</option>`).join('')}</select></div>
-        <div><label class="label">Body Color (hex)</label><input id="pmColor" class="input" value="${p?'#'+p.color.toString(16).padStart(6,'0'):'#111827'}"></div>
-        <div><label class="label">Accent Color (hex)</label><input id="pmAccent" class="input" value="${p?'#'+p.accent.toString(16).padStart(6,'0'):'#00f0ff'}"></div>
-        <div><label class="label">Available text</label><input id="pmAvail" class="input" value="${p?.available||'In stock — Pakistan'}"></div>
+        <div class="sm:col-span-2"><label class="label">Available Text</label><input id="pmAvail" class="input" value="${p?.available||'In stock — Pakistan'}"></div>
         <div class="sm:col-span-2"><label class="label">Specs (Key: Value, one per line)</label><textarea id="pmSpecs" class="input" rows="4">${p?Object.entries(p.specs).map(([k,v])=>`${k}: ${v}`).join('\n'):''}</textarea></div>
       </div>
       <div class="flex justify-end gap-2 mt-5">
@@ -1672,6 +1631,11 @@ function saveProduct(id){
   const specsRaw = document.getElementById('pmSpecs').value.trim();
   const specs = {};
   specsRaw.split('\n').forEach(l=>{ const m = l.split(':'); if(m.length>=2) specs[m[0].trim()] = m.slice(1).join(':').trim(); });
+  const imagesRaw = document.getElementById('pmImages').value.trim();
+  const images = imagesRaw ? imagesRaw.split('\n').map(s=>s.trim()).filter(Boolean) : [];
+  const mainImage = document.getElementById('pmImage').value.trim();
+  if(mainImage && !images.includes(mainImage)) images.unshift(mainImage);
+
   const newP = {
     id: id||('p'+Date.now()),
     name: document.getElementById('pmName').value.trim(),
@@ -1682,9 +1646,8 @@ function saveProduct(id){
     stock: +document.getElementById('pmStock').value,
     rating: +document.getElementById('pmRating').value,
     description: document.getElementById('pmDesc').value,
-    shape: document.getElementById('pmShape').value,
-    color: parseInt(document.getElementById('pmColor').value.replace('#',''),16),
-    accent: parseInt(document.getElementById('pmAccent').value.replace('#',''),16),
+    image: mainImage || (images[0]||''),
+    images: images,
     available: document.getElementById('pmAvail').value,
     specs
   };
@@ -1704,7 +1667,7 @@ function adminOrdersHTML(){
     <div class="overflow-x-auto glass">
       <table class="w-full text-sm">
         <thead class="text-left text-xs uppercase text-gray-400 border-b border-white/10">
-          <tr><th class="p-3">Order ID</th><th class="p-3">Customer</th><th class="p-3">City</th><th class="p-3">Items</th><th class="p-3">Total</th><th class="p-3">Status</th><th class="p-3">Date</th></tr>
+          <tr><th class="p-3">Order ID</th><th class="p-3">Customer</th><th class="p-3">City</th><th class="p-3">Items</th><th class="p-3">Total</th><th class="p-3">Status</th><th class="p-3">Date</th><th class="p-3"></th></tr>
         </thead>
         <tbody>
           ${state.orders.map(o=>`
@@ -1720,6 +1683,7 @@ function adminOrdersHTML(){
                 </select>
               </td>
               <td class="p-3 text-xs text-gray-400">${new Date(o.date).toLocaleDateString('en-PK')}</td>
+              <td class="p-3"><button class="btn-ghost !p-1 !px-2 !text-xs text-red-400" onclick="deleteOrder('${o.id}')"><i class="fa-solid fa-trash"></i></button></td>
             </tr>`).join('')}
         </tbody>
       </table>
@@ -1728,6 +1692,13 @@ function adminOrdersHTML(){
 function updateOrderStatus(id,status){
   const o = state.orders.find(x=>x.id===id); if(!o) return;
   o.status = status; save(STORAGE.orders,state.orders); toast('Order updated');
+}
+function deleteOrder(id){
+  if(!confirm('Delete this order?')) return;
+  state.orders = state.orders.filter(o=>o.id!==id);
+  save(STORAGE.orders, state.orders);
+  toast('Order deleted');
+  adminRenderBody();
 }
 function adminCategoriesHTML(){
   const cats = [...new Set(state.products.map(p=>p.category))];
@@ -1742,8 +1713,121 @@ function adminCategoriesHTML(){
     </div>
     <p class="text-xs text-gray-500 mt-4">Categories are derived from products. Add new products with new categories to expand the list.</p>`;
 }
+function adminCustomersHTML(){
+  if(state.users.length===0) return `<div class="glass p-10 text-center text-gray-400">No registered customers yet</div>`;
+  return `
+    <div class="overflow-x-auto glass">
+      <table class="w-full text-sm">
+        <thead class="text-left text-xs uppercase text-gray-400 border-b border-white/10">
+          <tr><th class="p-3">Name</th><th class="p-3">Email</th><th class="p-3">Joined</th><th class="p-3">Orders</th><th class="p-3"></th></tr>
+        </thead>
+        <tbody>
+          ${state.users.map(u=>{
+            const userOrders = state.orders.filter(o=>(o.customerEmail||'').toLowerCase()===u.email.toLowerCase()).length;
+            return `<tr class="border-b border-white/5 hover:bg-white/5">
+              <td class="p-3 font-semibold">${u.name}</td>
+              <td class="p-3 text-gray-400">${u.email}</td>
+              <td class="p-3 text-xs text-gray-400">${new Date(u.joined).toLocaleDateString('en-PK')}</td>
+              <td class="p-3">${userOrders}</td>
+              <td class="p-3"><button class="btn-ghost !p-1 !px-2 !text-xs text-red-400" onclick="deleteUser('${u.email}')"><i class="fa-solid fa-trash"></i></button></td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>`;
+}
+function deleteUser(email){
+  if(!confirm('Delete this customer?')) return;
+  state.users = state.users.filter(u=>u.email!==email);
+  save(STORAGE.users, state.users);
+  toast('Customer deleted');
+  adminRenderBody();
+}
+function adminContactsHTML(){
+  const c = state.contacts;
+  return `
+    <div class="glass p-6">
+      <h3 class="font-display text-xl mb-1">Contact Information</h3>
+      <p class="text-xs text-gray-400 mb-5">These details appear in the website footer & WhatsApp button.</p>
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div><label class="label">Phone Number</label><input id="ctPhone" class="input" value="${c.phone||''}"></div>
+        <div><label class="label">Email Address</label><input id="ctEmail" class="input" value="${c.email||''}"></div>
+        <div class="sm:col-span-2"><label class="label">Office Address</label><input id="ctAddress" class="input" value="${c.address||''}"></div>
+        <div class="sm:col-span-2"><label class="label">WhatsApp Number (digits only, with country code, e.g. 923001234567)</label><input id="ctWhatsapp" class="input" value="${c.whatsapp||''}"></div>
+      </div>
+      <h3 class="font-display text-xl mt-8 mb-1">Social Media Links</h3>
+      <p class="text-xs text-gray-400 mb-5">Full URLs (e.g. https://facebook.com/yourpage)</p>
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div><label class="label"><i class="fa-brands fa-facebook"></i> Facebook</label><input id="ctFb" class="input" value="${c.facebook||''}"></div>
+        <div><label class="label"><i class="fa-brands fa-instagram"></i> Instagram</label><input id="ctIg" class="input" value="${c.instagram||''}"></div>
+        <div><label class="label"><i class="fa-brands fa-tiktok"></i> TikTok</label><input id="ctTt" class="input" value="${c.tiktok||''}"></div>
+        <div><label class="label"><i class="fa-brands fa-twitter"></i> Twitter / X</label><input id="ctTw" class="input" value="${c.twitter||''}"></div>
+        <div><label class="label"><i class="fa-brands fa-youtube"></i> YouTube</label><input id="ctYt" class="input" value="${c.youtube||''}"></div>
+      </div>
+      <div class="flex justify-end gap-2 mt-6">
+        <button class="btn-ghost" onclick="resetContacts()">Reset to Defaults</button>
+        <button class="btn-neon" onclick="saveContacts()"><i class="fa-solid fa-save"></i> Save Changes</button>
+      </div>
+    </div>`;
+}
+function saveContacts(){
+  state.contacts = {
+    phone: document.getElementById('ctPhone').value.trim(),
+    email: document.getElementById('ctEmail').value.trim(),
+    address: document.getElementById('ctAddress').value.trim(),
+    whatsapp: document.getElementById('ctWhatsapp').value.trim().replace(/[^0-9]/g,''),
+    facebook: document.getElementById('ctFb').value.trim(),
+    instagram: document.getElementById('ctIg').value.trim(),
+    tiktok: document.getElementById('ctTt').value.trim(),
+    twitter: document.getElementById('ctTw').value.trim(),
+    youtube: document.getElementById('ctYt').value.trim()
+  };
+  save(STORAGE.contacts, state.contacts);
+  renderFooter();
+  updateWhatsAppFloat();
+  toast('Contacts updated');
+}
+function resetContacts(){
+  if(!confirm('Reset all contact info to defaults?')) return;
+  state.contacts = {...DEFAULT_CONTACTS};
+  save(STORAGE.contacts, state.contacts);
+  renderFooter();
+  updateWhatsAppFloat();
+  adminRenderBody();
+  toast('Contacts reset');
+}
 
-/* ---------- MODAL ---------- */
+/* CONTACT page (public) */
+function renderContact(){
+  const c = state.contacts;
+  document.getElementById('app').innerHTML = `
+    <section class="page max-w-5xl mx-auto px-6 py-10">
+      <h1 class="section-title font-display mb-2"><span class="neon-text">Contact</span> Us</h1>
+      <p class="text-gray-400 mb-8">We're here to help across Pakistan</p>
+      <div class="grid md:grid-cols-3 gap-5">
+        <div class="glass p-6 text-center">
+          <i class="fa-solid fa-phone text-3xl neon-text"></i>
+          <div class="font-display mt-3">Call Us</div>
+          <a href="tel:${c.phone}" class="text-gray-300 mt-1 inline-block">${c.phone}</a>
+        </div>
+        <div class="glass p-6 text-center">
+          <i class="fa-solid fa-envelope text-3xl neon-text"></i>
+          <div class="font-display mt-3">Email</div>
+          <a href="mailto:${c.email}" class="text-gray-300 mt-1 inline-block">${c.email}</a>
+        </div>
+        <div class="glass p-6 text-center">
+          <i class="fa-solid fa-location-dot text-3xl neon-text"></i>
+          <div class="font-display mt-3">Visit</div>
+          <div class="text-gray-300 mt-1">${c.address}</div>
+        </div>
+      </div>
+      <div class="text-center mt-8">
+        <a href="https://wa.me/${c.whatsapp}" target="_blank" class="btn-neon" style="background:#25d366"><i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp</a>
+      </div>
+    </section>`;
+}
+
+/* MODAL */
 function openModal(html){
   document.getElementById('modalCard').innerHTML = html;
   document.getElementById('modal').classList.add('show');
@@ -1754,25 +1838,30 @@ function closeModal(){
   document.getElementById('overlay').classList.remove('show');
 }
 
-/* ---------- SEARCH ---------- */
+/* SEARCH */
 function openSearch(){
   navigate('shop');
   setTimeout(()=>{ const el = document.getElementById('searchInput'); el && el.focus(); }, 200);
 }
 
-/* ---------- AI Recommendations (heuristic) ---------- */
+/* AI Recommendations */
 function aiRecommend(n=3){
-  // Score by rating, recency, low stock = popular, plus randomization for "AI"
   return state.products.slice()
     .sort((a,b)=> (b.rating*1.5 + (1/(b.stock+1))*0.4 + Math.random()*0.5) - (a.rating*1.5 + (1/(a.stock+1))*0.4 + Math.random()*0.5))
     .slice(0,n);
 }
 
-/* ---------- REVEAL ANIMATIONS ---------- */
-function initReveal(){
-  // Re-init in case
-  initRevealAnimations();
+function iconForCat(cat){
+  return {
+    'Mobile Phones':'fa-mobile-screen-button',
+    'Laptops':'fa-laptop',
+    'Earbuds':'fa-headphones',
+    'Smart Watches':'fa-stopwatch',
+    'Accessories':'fa-plug'
+  }[cat]||'fa-box';
 }
+
+/* REVEAL */
 function initRevealAnimations(){
   const els = document.querySelectorAll('.reveal');
   if(!els.length) return;
@@ -1782,13 +1871,74 @@ function initRevealAnimations(){
   els.forEach(el=>io.observe(el));
 }
 
-/* ---------- HEADER SCROLL ---------- */
+/* FOOTER */
+function renderFooter(){
+  const c = state.contacts;
+  const social = [
+    {url:c.facebook, icon:'fa-facebook'},
+    {url:c.instagram, icon:'fa-instagram'},
+    {url:c.tiktok, icon:'fa-tiktok'},
+    {url:c.twitter, icon:'fa-twitter'},
+    {url:c.youtube, icon:'fa-youtube'}
+  ].filter(s=>s.url);
+  document.getElementById('footerArea').innerHTML = `
+    <div class="max-w-7xl mx-auto px-6 py-14 grid md:grid-cols-4 gap-10">
+      <div>
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-9 h-9 rounded-xl flex items-center justify-center font-display font-black text-black" style="background:linear-gradient(135deg,var(--neon),var(--neon-2))">V</div>
+          <span class="font-display text-xl neon-text">VOLTRIX</span>
+        </div>
+        <p class="text-gray-400 text-sm">Pakistan's premier electronics store. Authentic gadgets, lightning delivery — Karachi to Khyber.</p>
+        <div class="flex gap-2 mt-4 flex-wrap">
+          ${social.map(s=>`<a class="btn-ghost !p-2 !px-3" href="${s.url}" target="_blank"><i class="fa-brands ${s.icon}"></i></a>`).join('')}
+          <a class="btn-ghost !p-2 !px-3" href="https://wa.me/${c.whatsapp}" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
+        </div>
+      </div>
+      <div>
+        <h4 class="font-display text-lg mb-3">Shop</h4>
+        <ul class="space-y-2 text-sm text-gray-400">
+          <li><span class="cursor-pointer hover:text-cyan-300" onclick="navigate('shop','Mobile Phones')">Mobile Phones</span></li>
+          <li><span class="cursor-pointer hover:text-cyan-300" onclick="navigate('shop','Laptops')">Laptops</span></li>
+          <li><span class="cursor-pointer hover:text-cyan-300" onclick="navigate('shop','Earbuds')">Earbuds</span></li>
+          <li><span class="cursor-pointer hover:text-cyan-300" onclick="navigate('shop','Smart Watches')">Smart Watches</span></li>
+          <li><span class="cursor-pointer hover:text-cyan-300" onclick="navigate('shop','Accessories')">Accessories</span></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-display text-lg mb-3">Support</h4>
+        <ul class="space-y-2 text-sm text-gray-400">
+          <li>📞 <a href="tel:${c.phone}">${c.phone}</a></li>
+          <li>✉️ <a href="mailto:${c.email}">${c.email}</a></li>
+          <li>📍 ${c.address}</li>
+          <li>🚚 Nationwide COD available</li>
+          <li><span class="cursor-pointer hover:text-cyan-300" onclick="navigate('contact')">Contact Page</span></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-display text-lg mb-3">Newsletter</h4>
+        <p class="text-sm text-gray-400 mb-3">Get exclusive PKR deals & new launches.</p>
+        <div class="flex gap-2">
+          <input class="input" placeholder="you@email.com" id="nlEmail">
+          <button class="btn-neon" onclick="(()=>{const v=document.getElementById('nlEmail').value;if(v){toast('Subscribed!');document.getElementById('nlEmail').value=''}else toast('Enter email')})()">Join</button>
+        </div>
+      </div>
+    </div>
+    <div class="text-center text-xs text-gray-500 py-5 border-t border-white/10">© 2026 VOLTRIX Pakistan. All prices in PKR (₨). Made with ⚡ in Lahore.</div>
+  `;
+}
+
+function updateWhatsAppFloat(){
+  const wa = document.getElementById('waFloat');
+  if(wa) wa.href = `https://wa.me/${state.contacts.whatsapp}?text=Hi%20VOLTRIX%2C%20I%20need%20help`;
+}
+
+/* HEADER SCROLL */
 window.addEventListener('scroll',()=>{
   const h = document.getElementById('header');
   if(window.scrollY>20) h.style.transform='translateY(0)'; else h.style.transform='';
 });
 
-/* ---------- INIT ---------- */
+/* INIT */
 window.addEventListener('load',()=>{
   setTimeout(()=>{
     const ld = document.getElementById('loader');
@@ -1797,6 +1947,7 @@ window.addEventListener('load',()=>{
   }, 1100);
   navigate('home');
   updateBadges();
+  updateWhatsAppFloat();
 });
 
 /* expose for inline onclicks */
@@ -1812,23 +1963,28 @@ window.toggleWish=toggleWish;
 window.applyFilter=applyFilter;
 window.resetFilter=resetFilter;
 window.placeOrder=placeOrder;
-window.adminLogin=adminLogin;
-window.adminLogout=adminLogout;
 window.adminSetTab=adminSetTab;
 window.openProductModal=openProductModal;
 window.saveProduct=saveProduct;
 window.deleteProduct=deleteProduct;
 window.updateOrderStatus=updateOrderStatus;
+window.deleteOrder=deleteOrder;
+window.deleteUser=deleteUser;
 window.closeModal=closeModal;
 window.switchAuth=switchAuth;
 window.login=login;
 window.signup=signup;
 window.logout=logout;
+window.logoutAdmin=logoutAdmin;
 window.openSearch=openSearch;
 window.adminFilterProducts=adminFilterProducts;
-window.resetViewer=resetViewer;
-window.autoRotateToggle=autoRotateToggle;
 window.buyNow=buyNow;
+window.selectImage=selectImage;
+window.openChangePasswordModal=openChangePasswordModal;
+window.changePassword=changePassword;
+window.saveContacts=saveContacts;
+window.resetContacts=resetContacts;
+window.renderDrawer=renderDrawer;
 </script>
 </body>
 </html>
